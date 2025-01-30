@@ -230,6 +230,68 @@ def set_limits_steps_orbit_ip15(collider):
     collider.vars.vary_default.update(orbit_correctors_ip15_limits)
 
 
+kmcb_max = 800e-6
+
+
+def set_limits_steps_disp_correctors(collider, kmcb_max=kmcb_max):
+    # TODO: find good step
+    disp_correctors_default = {
+        # IP1 Beam1
+        "acbh16.r8b1": {"step": 1e-11, "limits": (-kmcb_max, kmcb_max)},
+        "acbh14.l1b1": {"step": 1e-11, "limits": (-kmcb_max, kmcb_max)},
+        "acbh12.l1b1": {"step": 1e-11, "limits": (-kmcb_max, kmcb_max)},
+        "acbh13.r1b1": {"step": 1e-11, "limits": (-kmcb_max, kmcb_max)},
+        "acbh15.r1b1": {"step": 1e-11, "limits": (-kmcb_max, kmcb_max)},
+        "acbh15.l2b1": {"step": 1e-11, "limits": (-kmcb_max, kmcb_max)},
+        "acbv15.r8b1": {"step": 1e-11, "limits": (-kmcb_max, kmcb_max)},
+        "acbv15.l1b1": {"step": 1e-11, "limits": (-kmcb_max, kmcb_max)},
+        "acbv13.l1b1": {"step": 1e-11, "limits": (-kmcb_max, kmcb_max)},
+        "acbv12.r1b1": {"step": 1e-11, "limits": (-kmcb_max, kmcb_max)},
+        "acbv14.r1b1": {"step": 1e-11, "limits": (-kmcb_max, kmcb_max)},
+        "acbv16.l2b1": {"step": 1e-11, "limits": (-kmcb_max, kmcb_max)},
+        # IP1 Beam2
+        "acbh15.r8b2": {"step": 1e-11, "limits": (-kmcb_max, kmcb_max)},
+        "acbh15.l1b2": {"step": 1e-11, "limits": (-kmcb_max, kmcb_max)},
+        "acbh13.l1b2": {"step": 1e-11, "limits": (-kmcb_max, kmcb_max)},
+        "acbh12.r1b2": {"step": 1e-11, "limits": (-kmcb_max, kmcb_max)},
+        "acbh14.r1b2": {"step": 1e-11, "limits": (-kmcb_max, kmcb_max)},
+        "acbh16.l2b2": {"step": 1e-11, "limits": (-kmcb_max, kmcb_max)},
+        "acbv16.r8b2": {"step": 1e-11, "limits": (-kmcb_max, kmcb_max)},
+        "acbv14.l1b2": {"step": 1e-11, "limits": (-kmcb_max, kmcb_max)},
+        "acbv12.l1b2": {"step": 1e-11, "limits": (-kmcb_max, kmcb_max)},
+        "acbv13.r1b2": {"step": 1e-11, "limits": (-kmcb_max, kmcb_max)},
+        "acbv15.r1b2": {"step": 1e-11, "limits": (-kmcb_max, kmcb_max)},
+        "acbv15.l2b2": {"step": 1e-11, "limits": (-kmcb_max, kmcb_max)},
+        # IP5 Beam1
+        "acbh16.r4b1": {"step": 1e-11, "limits": (-kmcb_max, kmcb_max)},
+        "acbh14.l5b1": {"step": 1e-11, "limits": (-kmcb_max, kmcb_max)},
+        "acbh12.l5b1": {"step": 1e-11, "limits": (-kmcb_max, kmcb_max)},
+        "acbh13.r5b1": {"step": 1e-11, "limits": (-kmcb_max, kmcb_max)},
+        "acbh15.r5b1": {"step": 1e-11, "limits": (-kmcb_max, kmcb_max)},
+        "acbh15.l6b1": {"step": 1e-11, "limits": (-kmcb_max, kmcb_max)},
+        "acbv15.r4b1": {"step": 1e-11, "limits": (-kmcb_max, kmcb_max)},
+        "acbv15.l5b1": {"step": 1e-11, "limits": (-kmcb_max, kmcb_max)},
+        "acbv13.l5b1": {"step": 1e-11, "limits": (-kmcb_max, kmcb_max)},
+        "acbv12.r5b1": {"step": 1e-11, "limits": (-kmcb_max, kmcb_max)},
+        "acbv14.r5b1": {"step": 1e-11, "limits": (-kmcb_max, kmcb_max)},
+        "acbv16.l6b1": {"step": 1e-11, "limits": (-kmcb_max, kmcb_max)},
+        # IP5 Beam 2
+        "acbh15.r4b2": {"step": 1e-11, "limits": (-kmcb_max, kmcb_max)},
+        "acbh15.l5b2": {"step": 1e-11, "limits": (-kmcb_max, kmcb_max)},
+        "acbh13.l5b2": {"step": 1e-11, "limits": (-kmcb_max, kmcb_max)},
+        "acbh12.r5b2": {"step": 1e-11, "limits": (-kmcb_max, kmcb_max)},
+        "acbh14.r5b2": {"step": 1e-11, "limits": (-kmcb_max, kmcb_max)},
+        "acbh16.l6b2": {"step": 1e-11, "limits": (-kmcb_max, kmcb_max)},
+        "acbv16.r4b2": {"step": 1e-11, "limits": (-kmcb_max, kmcb_max)},
+        "acbv14.l5b2": {"step": 1e-11, "limits": (-kmcb_max, kmcb_max)},
+        "acbv12.l5b2": {"step": 1e-11, "limits": (-kmcb_max, kmcb_max)},
+        "acbv13.r5b2": {"step": 1e-11, "limits": (-kmcb_max, kmcb_max)},
+        "acbv15.r5b2": {"step": 1e-11, "limits": (-kmcb_max, kmcb_max)},
+        "acbv15.l6b2": {"step": 1e-11, "limits": (-kmcb_max, kmcb_max)},
+    }
+    collider.vars.vary_default.update(disp_correctors_default)
+
+
 k2max = 0.38
 
 

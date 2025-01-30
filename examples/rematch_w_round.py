@@ -5,8 +5,11 @@ from rematch_hl_tools.rematch_w import _reset_sext_knobs
 from matplotlib import pyplot as plt
 
 # %%
-env1 = xt.Environment.from_json("build_hl/hl_coll.json")
-env = xt.Environment.from_json("build_hl/hl_coll.json")
+# env1 = xt.Environment.from_json("build_hl/hl_coll.json")
+# env = xt.Environment.from_json("build_hl/hl_coll.json")
+
+env1 = xt.Environment.from_json("rematch_round_1300.json")
+env = xt.Environment.from_json("rematch_round_1300_v3.json")
 
 # %%
 rematch_hl_tools.set_limits_steps_sextupoles_w(env)
@@ -24,31 +27,6 @@ twb2 = env1["lhcb2"].cycle("ip3").twiss(method="4d")
 
 # %%
 opts = rematch_hl_tools.rematch_w_default(env)
-# %%
-optimizers = {}
-# %%
-rematch_hl_tools.set_sext_all(env, 0.06, -0.099, 0.06, -0.099)
-old_vals = _reset_sext_knobs(env)
-
-# %%
-optimizers["dqxw_b1"] = rematch_hl_tools.corchroma_weak(env, 2, "b1")
-optimizers["dqxw_b2"] = rematch_hl_tools.corchroma_weak(env, 2, "b2")
-
-# %%
-optimizers["w_b1"] = rematch_hl_tools.rematch_w(env, "b1", solve=True)
-optimizers["w_b2"] = rematch_hl_tools.rematch_w(env, "b2", solve=True)
-# %%
-optimizers["dqxw2_b1"] = rematch_hl_tools.corchroma_weak(env, 2, "b1")
-optimizers["dqxw2_b2"] = rematch_hl_tools.corchroma_weak(env, 2, "b2")
-
-# %%
-optimizers["w_b1"].log()
-# %%
-optimizers["w_b2"].log()
-# %%
-optimizers["wb1"].target_status()
-# %%
-optimizers["wb2"].target_status()
 # %%
 twb1_w = env["lhcb1"].cycle("ip3").twiss(method="4d")
 twb2_w = env["lhcb2"].cycle("ip3").twiss(method="4d")
