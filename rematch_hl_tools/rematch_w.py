@@ -186,6 +186,9 @@ def rematch_w(collider, bim, solve=False, nsteps=4):
     ksfd_w2 = {"b1": ["ksd1.a12b1", "ksd1.a56b1"], "b2": ["ksd2.a81b2", "ksd2.a45b2"]}
 
     line1 = collider[f"lhc{bim}"].cycle("ip3")
+    line1.twiss_default["method"] = "4d"
+    if bim == "b2":
+        line1.twiss_default["reverse"] = True
     tw = line1.twiss(method="4d")
 
     start_range = f"mbxf.4l1/lhc{bim}"

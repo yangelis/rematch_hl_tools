@@ -227,9 +227,9 @@ def rematch_disp(
     if cycle:
         collider["lhcb1"].cycle("s.ds.l3.b1", inplace=True)
         collider["lhcb2"].cycle("s.ds.l3.b2", inplace=True)
-        collider.lhcb1.twiss_default["method"] = "4d"
-        collider.lhcb2.twiss_default["method"] = "4d"
-        collider.lhcb2.twiss_default["reverse"] = True
+        collider["lhcb1"].twiss_default["method"] = "4d"
+        collider["lhcb2"].twiss_default["method"] = "4d"
+        collider["lhcb2"].twiss_default["reverse"] = True
 
     tw_init_b1 = collider["lhcb1"].twiss()
     tw_init_b2 = collider["lhcb2"].twiss()
@@ -630,9 +630,9 @@ def rematch_disp(
     if cycle:
         collider["lhcb1"].cycle("lhcb1$start", inplace=True)
         collider["lhcb2"].cycle("lhcb2$start", inplace=True)
-        collider.lhcb1.twiss_default["method"] = "4d"
-        collider.lhcb2.twiss_default["method"] = "4d"
-        collider.lhcb2.twiss_default["reverse"] = True
+        collider["lhcb1"].twiss_default["method"] = "4d"
+        collider["lhcb2"].twiss_default["method"] = "4d"
+        collider["lhcb2"].twiss_default["reverse"] = True
 
     opts = {
         "dx1hs_dsep1v_b1": opt_x1hs_sep1v_b1,

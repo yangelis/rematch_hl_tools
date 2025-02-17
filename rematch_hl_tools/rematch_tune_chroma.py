@@ -18,7 +18,7 @@ def rematch_tune(collider, targets, default_targets=False, solve=False):
         opt = collider[line_name].match(
             solve=False,
             assert_within_tol=False,
-            restore_if_fail=True,
+            restore_if_fail=False,
             verbose=False,
             n_steps_max=5,
             targets=[
