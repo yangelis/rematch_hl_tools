@@ -6,9 +6,13 @@ from xtrack._temp.lhc_match import get_arc_periodic_solution
 from matplotlib import pyplot as plt
 
 # %%
-env1 = xt.Environment.from_json("build_hl/hl_coll.json")
+# env1 = xt.Environment.from_json("build_hl/hl_coll.json")
 # env = xt.Environment.from_json("build_hl/hl_coll.json")
-env = xt.Environment.from_json("rematch_round_1300_v2.json")
+# env = xt.Environment.from_json("rematch_round_1300_v2.json")
+
+
+env1 = xt.Environment.from_json("rematch_round_1000.json")
+env = xt.Environment.from_json("rematch_round_1000.json")
 
 # %%
 rematch_hl_tools.set_limits_steps_quads_ip15(env)
@@ -61,7 +65,7 @@ plt.show()
 # %%
 optimizers = {}
 # %%
-betxy = 1.3
+betxy = 1.0
 
 optimizers["ir15"] = rematch_hl_tools.rematch_ir15(
     env,
@@ -73,8 +77,8 @@ optimizers["ir15"] = rematch_hl_tools.rematch_ir15(
     ir5q5sym=0,
     ir5q6sym=0,
     solve=True,
-    beta_peak_ratio=0.85,
-    match_on_triplet=1,
+    beta_peak_ratio=0.98,
+    match_on_triplet=5,
 )
 # %%
 optimizers["ir15_2"] = rematch_hl_tools.rematch_ir15(
@@ -98,12 +102,18 @@ beta0.muy = 0
 tw_ip5_n = env.lhcb1.twiss(start="s.ds.l5.b1", end="e.ds.r5.b1", init=beta0)
 
 # %%
+print(tw_ip5_n["bety", "mqxfb.a2r5/lhcb1"] / tw_ip5_n["betx", "mqxfa.b3r5/lhcb1"])
+# %%
 fig, axs = plt.subplots(figsize=(14, 10.5))
 axs.set_title("IP5")
 axs.plot(tw_ip5.s, tw_ip5.betx, ls="--", color="blue", label=r"Old $\beta_x$")
 axs.plot(tw_ip5_n.s, tw_ip5_n.betx, ls="-", color="blue", label=r"$\beta_x$")
 axs.plot(tw_ip5.s, tw_ip5.bety, ls="--", color="green", label=r"Old $\beta_y$")
 axs.plot(tw_ip5_n.s, tw_ip5_n.bety, ls="-", color="green", label=r"$\beta_y$")
+
+
+# axs.vlines(tw_ip5_n["s", "mqxfb.a2r5/lhcb1"], ymin=0, ymax=axs.get_ylim()[1],lw=2)
+# axs.vlines(tw_ip5_n["s", "mqxfa.b3r5/lhcb1"], ymin=0, ymax=axs.get_ylim()[1],lw=2)
 
 axs.set_xlabel("s [m]")
 axs.set_ylabel(r"$\beta_{x,y} [m]$")
@@ -137,6 +147,7 @@ plt.show()
 
 # env.to_json('rematch_round_1300.json')
 # env.to_json('rematch_round_1300_v2.json')
-env.to_json('rematch_round_1300_v3.json')
+# env.to_json("rematch_round_1300_v3.json")
+env.to_json("rematch_round_1000.json")
 
 # %%

@@ -6,8 +6,12 @@ from matplotlib import pyplot as plt
 from utils import set_vars, configs
 
 # %%
-env1 = xt.Environment.from_json("rematch_round_1300_v3.json")
-env = xt.Environment.from_json("rematch_round_1300_v3.json")
+# env1 = xt.Environment.from_json("rematch_round_1300_v3.json")
+# env = xt.Environment.from_json("rematch_round_1300_v3.json")
+
+env1 = xt.Environment.from_json("rematch_round_1000.json")
+env = xt.Environment.from_json("rematch_round_1000.json")
+
 # %%
 twb1 = env1["lhcb1"].cycle("ip3").twiss(method="4d")
 twb2 = env1["lhcb2"].cycle("ip3").twiss(method="4d")
@@ -52,6 +56,8 @@ plt.show()
 
 # %%
 
-env.to_json("opt_round_1300_xing.json")
+# env.to_json("opt_round_1300_xing.json")
+
+env.to_json("opt_round_1000_xing.json")
 
 # %%

@@ -4,15 +4,17 @@ from cpymad.madx import Madx
 
 # %%
 # optics_name = "../../../acc-models-lhc/strengths/round/opt_round_150_1000.madx"
-optics_name = "../../../acc-models-lhc_orig/strengths/round/start_collapse/opt_collapse_1320_1500.madx"
+# optics_name = "../../../acc-models-lhc_orig/strengths/round/start_collapse/opt_collapse_1320_1500.madx"
+optics_name = "../../../acc-models-lhc_orig/strengths/round/start_collapse/opt_collapse_1000_1500.madx"
+
 # %%
 mad = Madx(stdout=False)
 mad.call("../../../acc-models-lhc/lhc.seq")
 mad.call("../../../acc-models-lhc/hllhc_sequence.madx")
 mad.call("../../../acc-models-lhc/hllhc_sequence.madx")
 mad.call(optics_name)
-mad.input("beam, sequence=lhcb1, particle=proton, energy=6800;")
-mad.input("beam, sequence=lhcb2, particle=proton, energy=6800,bv=-1;")
+mad.input("beam, sequence=lhcb1, particle=proton, energy=7000;")
+mad.input("beam, sequence=lhcb2, particle=proton, energy=7000,bv=-1;")
 mad.use("lhcb1")
 mad.use("lhcb2")
 
