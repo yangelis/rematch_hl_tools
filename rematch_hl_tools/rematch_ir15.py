@@ -1,6 +1,6 @@
 import xtrack as xt
 import xtrack._temp.lhc_match as lm
-
+import numpy as np
 
 default_tol = {
     None: 1e-8,
@@ -64,6 +64,7 @@ def rematch_ir15(
         2 : Q2 free
         3 :
         4 : Link Q1 with Q3
+        5 : Match on max(betax)/max(betay)
     match_inj_tunes: bool
     no_match_beta: bool
         If False, match beta at the ip
@@ -358,10 +359,11 @@ def rematch_ir15(
         connect_lr_qx(collider, 3)
         vary_list.append(xt.Vary("kqx1.l5"))
         vary_list.append(xt.Vary("kqx2a.l5"))
+        # Ratio of max betas in x and y
         targets.append(
             xt.Target(
-                lambda tt: tt.lhcb1["bety", "mqxfb.a2r5/lhcb1"]
-                / tt.lhcb1["betx", "mqxfa.b3r5/lhcb1"],
+                lambda tt: np.max(tt.lhcb1.rows["ip5":"ip5>>70"].betx)
+                / np.max(tt.lhcb1.rows["ip5":"ip5>>70"].bety),
                 value=beta_peak_ratio,
                 tol=1e-2,
             )
