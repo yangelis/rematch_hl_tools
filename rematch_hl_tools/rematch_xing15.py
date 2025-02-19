@@ -327,7 +327,7 @@ def match_orbit_knobs_ip15(
                         cvars[cor_name] = 0
             for cor in correctors_mcbc:
                 cor_name = cor.replace("irn", irn)
-                collider.vars[cor_name] = 0
+                cvars[cor_name] = 0
 
     twinit_zero_orbit = [xt.TwissInit(), xt.TwissInit()]
 
@@ -1156,14 +1156,14 @@ def match_orbit_knobs_ip15(
     ################ on_o
 
     # Disconnect acbx2
-    collider.vars["acbxh2.l1"] = 0
-    collider.vars["acbxh2.r1"] = 0
-    collider.vars["acbxh2.l5"] = 0
-    collider.vars["acbxh2.r5"] = 0
-    collider.vars["acbxv2.l1"] = 0
-    collider.vars["acbxv2.r1"] = 0
-    collider.vars["acbxv2.l5"] = 0
-    collider.vars["acbxv2.r5"] = 0
+    cvars["acbxh2.l1"] = 0
+    cvars["acbxh2.r1"] = 0
+    cvars["acbxh2.l5"] = 0
+    cvars["acbxh2.r5"] = 0
+    cvars["acbxv2.l1"] = 0
+    cvars["acbxv2.r1"] = 0
+    cvars["acbxv2.l5"] = 0
+    cvars["acbxv2.r5"] = 0
 
     ipoff = 0.5
     on_o_fmt = "on_oiphv"
@@ -1546,16 +1546,16 @@ def rename_knobs_as_madx(collider):
     )
 
     # IP1
-    v["acbch7.l1b2"] = v["acbch7.l1b2_from_on_o1h"]
-    v["acbch7.r1b1"] = v["acbch7.r1b1_from_on_o1h"]
-    v["acbcv7.l1b1"] = v["acbcv7.l1b1_from_on_o1v"]
-    v["acbcv7.r1b2"] = v["acbcv7.r1b2_from_on_o1v"]
+    v["acbch7.l1b2"] = v["acbch7.l1b2_from_on_o1h"]._expr._lhs * v["on_o1h"]
+    v["acbch7.r1b1"] = v["acbch7.r1b1_from_on_o1h"]._expr._lhs * v["on_o1h"]
+    v["acbcv7.l1b1"] = v["acbcv7.l1b1_from_on_o1v"]._expr._lhs * v["on_o1v"]
+    v["acbcv7.r1b2"] = v["acbcv7.r1b2_from_on_o1v"]._expr._lhs * v["on_o1v"]
 
     # IP5
-    v["acbch7.l5b2"] = v["acbch7.l5b2_from_on_o5h"]
-    v["acbch7.r5b1"] = v["acbch7.r5b1_from_on_o5h"]
-    v["acbcv7.l5b1"] = v["acbcv7.l5b1_from_on_o5v"]
-    v["acbcv7.r5b2"] = v["acbcv7.r5b2_from_on_o5v"]
+    v["acbch7.l5b2"] = v["acbch7.l5b2_from_on_o5h"]._expr._lhs * v["on_o5h"]
+    v["acbch7.r5b1"] = v["acbch7.r5b1_from_on_o5h"]._expr._lhs * v["on_o5h"]
+    v["acbcv7.l5b1"] = v["acbcv7.l5b1_from_on_o5v"]._expr._lhs * v["on_o5v"]
+    v["acbcv7.r5b2"] = v["acbcv7.r5b2_from_on_o5v"]._expr._lhs * v["on_o5v"]
 
     f = collider.functions
     v["phi_ir1"] = 0.0
