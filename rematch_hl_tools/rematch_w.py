@@ -131,6 +131,16 @@ def corchroma_weak(collider, qprime, bim):
     correct Q' using the SF/SD families of sectors 23/34/56/67
     """
 
+    for ksfd in ksf_names_non_ats_arcs.split():
+        ksf_name = ksfd.replace("bim", bim)
+        old_val = collider.varval[ksf_name]
+        collider.vars[ksf_name] = old_val + (1.0 * collider.vars[f"ksf.{bim}"])
+
+    for ksfd in ksd_names_non_ats_arcs.split():
+        ksd_name = ksfd.replace("bim", bim)
+        old_val = collider.varval[ksd_name]
+        collider.vars[ksd_name] = old_val + (1.0 * collider.vars[f"ksd.{bim}"])
+
     opt = collider[f"lhc{bim}"].match(
         assert_within_tol=False,
         restore_if_fail=False,
@@ -159,9 +169,7 @@ def corchroma_weak(collider, qprime, bim):
     return opt
 
 
-def rematch_w(collider, bim, solve=False, nsteps=4):
-    sign_I = {"b1": 1, "b2": -1}[bim]
-
+def rematch_w(collider, bim, solve=False, nsteps=4, kill_old_vals=False):
     ksfd = {
         "b1": [
             "ksf1.a81b1",
@@ -182,13 +190,13 @@ def rematch_w(collider, bim, solve=False, nsteps=4):
     }
 
     ksfd_w = {"b1": ["ksd2.a12b1", "ksd2.a56b1"], "b2": ["ksd1.a81b2", "ksd1.a45b2"]}
-
     ksfd_w2 = {"b1": ["ksd1.a12b1", "ksd1.a56b1"], "b2": ["ksd2.a81b2", "ksd2.a45b2"]}
 
-    line1 = collider[f"lhc{bim}"].cycle("ip3")
+    line1 = collider[f"lhc{bim}"].cycle(f"s.ds.l3.{bim}")
     line1.twiss_default["method"] = "4d"
     if bim == "b2":
         line1.twiss_default["reverse"] = True
+
     tw = line1.twiss(method="4d")
 
     start_range = f"mbxf.4l1/lhc{bim}"
@@ -204,6 +212,7 @@ def rematch_w(collider, bim, solve=False, nsteps=4):
         init=twiss_init,
         compute_chromatic_properties=True,
     )
+
     start_range = "ip1"
     end_range = f"mbxf.4r1/lhc{bim}"
     twiss_init = tw.get_twiss_init(end_range)
@@ -252,6 +261,24 @@ def rematch_w(collider, bim, solve=False, nsteps=4):
     tar_ix5 = 0.5 * (tw_l5.ax_chrom[-1] - tw_r5.ax_chrom[-1])
     tar_iy5 = 0.5 * (tw_l5.ay_chrom[-1] - tw_r5.ay_chrom[-1])
 
+    import numpy as np
+    tar_ix1 = 0.5 * (np.abs(tw_l1.ax_chrom[-1]) - np.abs(tw_r1.ax_chrom[0]))
+    tar_iy1 = 0.5 * (np.abs(tw_l1.ay_chrom[-1]) - np.abs(tw_r1.ay_chrom[0]))
+    tar_ix5 = 0.5 * (np.abs(tw_l5.ax_chrom[-1]) - np.abs(tw_r5.ax_chrom[0]))
+    tar_iy5 = 0.5 * (np.abs(tw_l5.ay_chrom[-1]) - np.abs(tw_r5.ay_chrom[0]))
+
+
+    # tar_ix1 = 0.5 * (np.sum(tw_l1.ax_chrom) - np.sum(tw_r1.ax_chrom))
+    # tar_iy1 = 0.5 * (np.sum(tw_l1.ay_chrom) - np.sum(tw_r1.ay_chrom))
+    # tar_ix5 = 0.5 * (np.sum(tw_l5.ax_chrom) - np.sum(tw_r5.ax_chrom))
+    # tar_iy5 = 0.5 * (np.sum(tw_l5.ay_chrom) - np.sum(tw_r5.ay_chrom))
+
+    if kill_old_vals:
+        for ks in ksfd[bim]:
+            line1.vars[ks] = 0
+        for ks in ksfd_w[bim]:
+            line1.vars[ks] = 0
+
     opt = collider[f"lhc{bim}"].match(
         solve=False,
         assert_within_tol=False,
@@ -266,31 +293,15 @@ def rematch_w(collider, bim, solve=False, nsteps=4):
         ],
         targets=[
             # IR3, IR7
-            xt.Target(tag="bxy", at="ip3", tar="bx_chrom", value=0),
-            xt.Target(tag="bxy", at="ip3", tar="by_chrom", value=0),
-            xt.Target(tag="axy", at="ip3", tar="ax_chrom", value=0, tol=1e-2),
-            xt.Target(tag="axy", at="ip3", tar="ay_chrom", value=0, tol=1e-2),
-            xt.Target(tag="bxy", at="ip7", tar="bx_chrom", value=0),
-            xt.Target(tag="bxy", at="ip7", tar="by_chrom", value=0),
-            xt.Target(tag="axy", at="ip7", tar="ax_chrom", value=0, tol=1e-2),
-            xt.Target(tag="axy", at="ip7", tar="ay_chrom", value=0, tol=1e-2),
+            xt.TargetSet(tag="axy", at="ip3", ax_chrom=0, ay_chrom=0, tol=1e-2),
+            xt.TargetSet(tag="axy", at="ip7", ax_chrom=0, ay_chrom=0, tol=1e-2),
+            xt.TargetSet(tag="bxy", at="ip3", bx_chrom=0, by_chrom=0),
+            xt.TargetSet(tag="bxy", at="ip7", bx_chrom=0, by_chrom=0),
             # IP1, IP5
-            xt.Target(tag="bxy", at="ip1", tar="bx_chrom", value=0),
-            xt.Target(tag="bxy", at="ip1", tar="by_chrom", value=0),
-            xt.Target(
-                tag="axy", at="ip1", tar="ax_chrom", value=sign_I * tar_ix1, tol=1e-2
-            ),
-            xt.Target(
-                tag="axy", at="ip1", tar="ay_chrom", value=-sign_I * tar_iy1, tol=1e-2
-            ),
-            xt.Target(tag="bxy", at="ip5", tar="bx_chrom", value=0),
-            xt.Target(tag="bxy", at="ip5", tar="by_chrom", value=0),
-            xt.Target(
-                tag="axy", at="ip5", tar="ax_chrom", value=sign_I * tar_ix5, tol=1e-2
-            ),
-            xt.Target(
-                tag="axy", at="ip5", tar="ay_chrom", value=-sign_I * tar_iy5, tol=1e-2
-            ),
+            xt.TargetSet(tag="bxy", at="ip1", bx_chrom=0, by_chrom=0),
+            xt.TargetSet(tag="bxy", at="ip5", bx_chrom=0, by_chrom=0),
+            xt.TargetSet(tag="axy", at="ip1", ax_chrom=tar_ix1, ay_chrom=tar_iy1),
+            xt.TargetSet(tag="axy", at="ip5", ax_chrom=tar_ix5, ay_chrom=tar_iy5),
         ],
     )
 
