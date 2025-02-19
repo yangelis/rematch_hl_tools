@@ -230,6 +230,91 @@ def set_limits_steps_orbit_ip15(collider):
     collider.vars.vary_default.update(orbit_correctors_ip15_limits)
 
 
+def set_var_limits_and_steps_correctors_on_o(collider):
+    brho = 23348.89927
+    limitMCBXH1 = 2.5 / brho * 0.40
+    limitMCBXH2 = 2.5 / brho * 0.15
+    limitMCBXH3 = 4.5 / brho * 0.05
+    limitMCBY = 2.8 / brho * 0.33
+    limitMCBC = 2.1 / brho * 0.33
+
+    step_mcbx = 1e-15
+    step_mcby = 1e-12
+    step_mcbc = 1e-12
+
+    orbit_correctors_on_o15hv = {
+        # MCBX
+        "acbxh1.l1": {"step": step_mcbx, "limits": (-limitMCBXH1, limitMCBXH1)},
+        "acbxh1.r1": {"step": step_mcbx, "limits": (-limitMCBXH1, limitMCBXH1)},
+        "acbxh2.l1": {"step": step_mcbx, "limits": (-limitMCBXH2, limitMCBXH2)},
+        "acbxh2.r1": {"step": step_mcbx, "limits": (-limitMCBXH2, limitMCBXH2)},
+        "acbxh3.l1": {"step": step_mcbx, "limits": (-limitMCBXH3, limitMCBXH3)},
+        "acbxh3.r1": {"step": step_mcbx, "limits": (-limitMCBXH3, limitMCBXH3)},
+        "acbxv1.l1": {"step": step_mcbx, "limits": (-limitMCBXH1, limitMCBXH1)},
+        "acbxv1.r1": {"step": step_mcbx, "limits": (-limitMCBXH1, limitMCBXH1)},
+        "acbxv2.l1": {"step": step_mcbx, "limits": (-limitMCBXH2, limitMCBXH2)},
+        "acbxv2.r1": {"step": step_mcbx, "limits": (-limitMCBXH2, limitMCBXH2)},
+        "acbxv3.l1": {"step": step_mcbx, "limits": (-limitMCBXH3, limitMCBXH3)},
+        "acbxv3.r1": {"step": step_mcbx, "limits": (-limitMCBXH3, limitMCBXH3)},
+        "acbxh1.l5": {"step": step_mcbx, "limits": (-limitMCBXH1, limitMCBXH1)},
+        "acbxh1.r5": {"step": step_mcbx, "limits": (-limitMCBXH1, limitMCBXH1)},
+        "acbxh2.l5": {"step": step_mcbx, "limits": (-limitMCBXH2, limitMCBXH2)},
+        "acbxh2.r5": {"step": step_mcbx, "limits": (-limitMCBXH2, limitMCBXH2)},
+        "acbxh3.l5": {"step": step_mcbx, "limits": (-limitMCBXH3, limitMCBXH3)},
+        "acbxh3.r5": {"step": step_mcbx, "limits": (-limitMCBXH3, limitMCBXH3)},
+        "acbxv1.l5": {"step": step_mcbx, "limits": (-limitMCBXH1, limitMCBXH1)},
+        "acbxv1.r5": {"step": step_mcbx, "limits": (-limitMCBXH1, limitMCBXH1)},
+        "acbxv2.l5": {"step": step_mcbx, "limits": (-limitMCBXH2, limitMCBXH2)},
+        "acbxv2.r5": {"step": step_mcbx, "limits": (-limitMCBXH2, limitMCBXH2)},
+        "acbxv3.l5": {"step": step_mcbx, "limits": (-limitMCBXH3, limitMCBXH3)},
+        "acbxv3.r5": {"step": step_mcbx, "limits": (-limitMCBXH3, limitMCBXH3)},
+        # MCBY
+        "acbyhs4.l1b1": {"step": step_mcby, "limits": (-limitMCBY, limitMCBY)},
+        "acbyhs4.l1b2": {"step": step_mcby, "limits": (-limitMCBY, limitMCBY)},
+        "acbyhs4.r1b1": {"step": step_mcby, "limits": (-limitMCBY, limitMCBY)},
+        "acbyhs4.r1b2": {"step": step_mcby, "limits": (-limitMCBY, limitMCBY)},
+        "acbyvs4.l1b1": {"step": step_mcby, "limits": (-limitMCBY, limitMCBY)},
+        "acbyvs4.l1b2": {"step": step_mcby, "limits": (-limitMCBY, limitMCBY)},
+        "acbyvs4.r1b1": {"step": step_mcby, "limits": (-limitMCBY, limitMCBY)},
+        "acbyvs4.r1b2": {"step": step_mcby, "limits": (-limitMCBY, limitMCBY)},
+        "acbyhs4.l5b1": {"step": step_mcby, "limits": (-limitMCBY, limitMCBY)},
+        "acbyhs4.l5b2": {"step": step_mcby, "limits": (-limitMCBY, limitMCBY)},
+        "acbyhs4.r5b1": {"step": step_mcby, "limits": (-limitMCBY, limitMCBY)},
+        "acbyhs4.r5b2": {"step": step_mcby, "limits": (-limitMCBY, limitMCBY)},
+        "acbyvs4.l5b1": {"step": step_mcby, "limits": (-limitMCBY, limitMCBY)},
+        "acbyvs4.l5b2": {"step": step_mcby, "limits": (-limitMCBY, limitMCBY)},
+        "acbyvs4.r5b1": {"step": step_mcby, "limits": (-limitMCBY, limitMCBY)},
+        "acbyvs4.r5b2": {"step": step_mcby, "limits": (-limitMCBY, limitMCBY)},
+        # MCBC
+        "acbch5.l1b2": {"step": step_mcbc, "limits": (-limitMCBC, limitMCBC)},
+        "acbch5.r1b1": {"step": step_mcbc, "limits": (-limitMCBC, limitMCBC)},
+        "acbch6.l1b1": {"step": step_mcbc, "limits": (-limitMCBC, limitMCBC)},
+        "acbch6.r1b2": {"step": step_mcbc, "limits": (-limitMCBC, limitMCBC)},
+        "acbcv5.l1b1": {"step": step_mcbc, "limits": (-limitMCBC, limitMCBC)},
+        "acbcv5.r1b2": {"step": step_mcbc, "limits": (-limitMCBC, limitMCBC)},
+        "acbcv6.l1b2": {"step": step_mcbc, "limits": (-limitMCBC, limitMCBC)},
+        "acbcv6.r1b1": {"step": step_mcbc, "limits": (-limitMCBC, limitMCBC)},
+        "acbch5.l5b2": {"step": step_mcbc, "limits": (-limitMCBC, limitMCBC)},
+        "acbch5.r5b1": {"step": step_mcbc, "limits": (-limitMCBC, limitMCBC)},
+        "acbch6.l5b1": {"step": step_mcbc, "limits": (-limitMCBC, limitMCBC)},
+        "acbch6.r5b2": {"step": step_mcbc, "limits": (-limitMCBC, limitMCBC)},
+        "acbcv5.l5b1": {"step": step_mcbc, "limits": (-limitMCBC, limitMCBC)},
+        "acbcv5.r5b2": {"step": step_mcbc, "limits": (-limitMCBC, limitMCBC)},
+        "acbcv6.l5b2": {"step": step_mcbc, "limits": (-limitMCBC, limitMCBC)},
+        "acbcv6.r5b1": {"step": step_mcbc, "limits": (-limitMCBC, limitMCBC)},
+        "acbch7.l1b2": {"step": step_mcbc, "limits": (-limitMCBC, limitMCBC)},
+        "acbch7.r1b1": {"step": step_mcbc, "limits": (-limitMCBC, limitMCBC)},
+        "acbcv7.l1b1": {"step": step_mcbc, "limits": (-limitMCBC, limitMCBC)},
+        "acbcv7.r1b2": {"step": step_mcbc, "limits": (-limitMCBC, limitMCBC)},
+        "acbch7.l5b2": {"step": step_mcbc, "limits": (-limitMCBC, limitMCBC)},
+        "acbch7.r5b1": {"step": step_mcbc, "limits": (-limitMCBC, limitMCBC)},
+        "acbcv7.l5b1": {"step": step_mcbc, "limits": (-limitMCBC, limitMCBC)},
+        "acbcv7.r5b2": {"step": step_mcbc, "limits": (-limitMCBC, limitMCBC)},
+    }
+
+    collider.vars.vary_default.update(orbit_correctors_on_o15hv)
+
+
 kmcb_max = 800e-6
 
 
@@ -295,41 +380,41 @@ def set_limits_steps_disp_correctors(collider, kmcb_max=kmcb_max):
 k2max = 0.38
 
 
-def set_limits_steps_sextupoles_w(collider):
+def set_limits_steps_sextupoles_w(collider, step=1e-4):
     sextupoles_defaults = {
         # Beam 1
-        "ksf1.a81b1": {"step": 1e-4, "limits": (-k2max, k2max)},
-        "ksf2.a81b1": {"step": 1e-4, "limits": (-k2max, k2max)},
-        "ksd1.a81b1": {"step": 1e-4, "limits": (-k2max, k2max)},
-        "ksd2.a81b1": {"step": 1e-4, "limits": (-k2max, k2max)},
-        "ksf1.a12b1": {"step": 1e-4, "limits": (-k2max, k2max)},
-        "ksf2.a12b1": {"step": 1e-4, "limits": (-k2max, k2max)},
-        "ksd1.a12b1": {"step": 1e-4, "limits": (-k2max, k2max)},
-        "ksd2.a12b1": {"step": 1e-4, "limits": (-k2max, k2max)},
-        "ksf1.a45b1": {"step": 1e-4, "limits": (-k2max, k2max)},
-        "ksf2.a45b1": {"step": 1e-4, "limits": (-k2max, k2max)},
-        "ksd1.a45b1": {"step": 1e-4, "limits": (-k2max, k2max)},
-        "ksd2.a45b1": {"step": 1e-4, "limits": (-k2max, k2max)},
-        "ksf1.a56b1": {"step": 1e-4, "limits": (-k2max, k2max)},
-        "ksf2.a56b1": {"step": 1e-4, "limits": (-k2max, k2max)},
-        "ksd1.a56b1": {"step": 1e-4, "limits": (-k2max, k2max)},
-        "ksd2.a56b1": {"step": 1e-4, "limits": (-k2max, k2max)},
+        "ksf1.a81b1": {"step": step, "limits": (-k2max, k2max)},
+        "ksf2.a81b1": {"step": step, "limits": (-k2max, k2max)},
+        "ksd1.a81b1": {"step": step, "limits": (-k2max, k2max)},
+        "ksd2.a81b1": {"step": step, "limits": (-k2max, k2max)},
+        "ksf1.a12b1": {"step": step, "limits": (-k2max, k2max)},
+        "ksf2.a12b1": {"step": step, "limits": (-k2max, k2max)},
+        "ksd1.a12b1": {"step": step, "limits": (-k2max, k2max)},
+        "ksd2.a12b1": {"step": step, "limits": (-k2max, k2max)},
+        "ksf1.a45b1": {"step": step, "limits": (-k2max, k2max)},
+        "ksf2.a45b1": {"step": step, "limits": (-k2max, k2max)},
+        "ksd1.a45b1": {"step": step, "limits": (-k2max, k2max)},
+        "ksd2.a45b1": {"step": step, "limits": (-k2max, k2max)},
+        "ksf1.a56b1": {"step": step, "limits": (-k2max, k2max)},
+        "ksf2.a56b1": {"step": step, "limits": (-k2max, k2max)},
+        "ksd1.a56b1": {"step": step, "limits": (-k2max, k2max)},
+        "ksd2.a56b1": {"step": step, "limits": (-k2max, k2max)},
         # Beam 2
-        "ksf1.a81b2": {"step": 1e-4, "limits": (-k2max, k2max)},
-        "ksf2.a81b2": {"step": 1e-4, "limits": (-k2max, k2max)},
-        "ksd1.a81b2": {"step": 1e-4, "limits": (-k2max, k2max)},
-        "ksd2.a81b2": {"step": 1e-4, "limits": (-k2max, k2max)},
-        "ksf1.a12b2": {"step": 1e-4, "limits": (-k2max, k2max)},
-        "ksf2.a12b2": {"step": 1e-4, "limits": (-k2max, k2max)},
-        "ksd1.a12b2": {"step": 1e-4, "limits": (-k2max, k2max)},
-        "ksd2.a12b2": {"step": 1e-4, "limits": (-k2max, k2max)},
-        "ksf1.a45b2": {"step": 1e-4, "limits": (-k2max, k2max)},
-        "ksf2.a45b2": {"step": 1e-4, "limits": (-k2max, k2max)},
-        "ksd1.a45b2": {"step": 1e-4, "limits": (-k2max, k2max)},
-        "ksd2.a45b2": {"step": 1e-4, "limits": (-k2max, k2max)},
-        "ksf1.a56b2": {"step": 1e-4, "limits": (-k2max, k2max)},
-        "ksf2.a56b2": {"step": 1e-4, "limits": (-k2max, k2max)},
-        "ksd1.a56b2": {"step": 1e-4, "limits": (-k2max, k2max)},
-        "ksd2.a56b2": {"step": 1e-4, "limits": (-k2max, k2max)},
+        "ksf1.a81b2": {"step": step, "limits": (-k2max, k2max)},
+        "ksf2.a81b2": {"step": step, "limits": (-k2max, k2max)},
+        "ksd1.a81b2": {"step": step, "limits": (-k2max, k2max)},
+        "ksd2.a81b2": {"step": step, "limits": (-k2max, k2max)},
+        "ksf1.a12b2": {"step": step, "limits": (-k2max, k2max)},
+        "ksf2.a12b2": {"step": step, "limits": (-k2max, k2max)},
+        "ksd1.a12b2": {"step": step, "limits": (-k2max, k2max)},
+        "ksd2.a12b2": {"step": step, "limits": (-k2max, k2max)},
+        "ksf1.a45b2": {"step": step, "limits": (-k2max, k2max)},
+        "ksf2.a45b2": {"step": step, "limits": (-k2max, k2max)},
+        "ksd1.a45b2": {"step": step, "limits": (-k2max, k2max)},
+        "ksd2.a45b2": {"step": step, "limits": (-k2max, k2max)},
+        "ksf1.a56b2": {"step": step, "limits": (-k2max, k2max)},
+        "ksf2.a56b2": {"step": step, "limits": (-k2max, k2max)},
+        "ksd1.a56b2": {"step": step, "limits": (-k2max, k2max)},
+        "ksd2.a56b2": {"step": step, "limits": (-k2max, k2max)},
     }
     collider.vars.vary_default.update(sextupoles_defaults)

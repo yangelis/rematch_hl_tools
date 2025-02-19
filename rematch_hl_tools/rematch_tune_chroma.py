@@ -8,7 +8,7 @@ def default_tune_chroma_targets():
     }
 
 
-def rematch_tune(collider, targets, default_targets=False, solve=False):
+def rematch_tune(collider, targets=None, default_targets=False, solve=False):
     if default_targets and targets is None:
         targets = default_tune_chroma_targets()
 
@@ -33,7 +33,7 @@ def rematch_tune(collider, targets, default_targets=False, solve=False):
     return optimizers
 
 
-def rematch_chroma(collider, targets, default_targets=False, solve=False):
+def rematch_chroma(collider, targets=None, default_targets=False, solve=False):
     if default_targets and targets is None:
         targets = default_tune_chroma_targets()
 
