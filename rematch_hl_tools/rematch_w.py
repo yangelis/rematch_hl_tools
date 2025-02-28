@@ -84,17 +84,13 @@ ksd_names_non_ats_arcs = (
 )
 
 ksf_names_ats_arcs = (
-    "ksf1.a12bim ksf1.a12bim ksf2.a12bim ksf2.a12bim "
-    "ksf1.a81bim ksf1.a81bim ksf2.a81bim ksf2.a81bim "
-    "ksf1.a56bim ksf1.a56bim ksf2.a56bim ksf2.a56bim "
-    "ksf1.a45bim ksf1.a45bim ksf2.a45bim ksf2.a45bim"
+    "ksf1.a12bim ksf2.a12bim ksf1.a81bim ksf2.a81bim  "
+    "ksf1.a56bim ksf2.a56bim ksf1.a45bim ksf2.a45bim"
 )
 
 ksd_names_ats_arcs = (
-    "ksd1.a12bim ksd1.a12bim ksd2.a12bim ksd2.a12bim "
-    "ksd1.a81bim ksd1.a81bim ksd2.a81bim ksd2.a81bim "
-    "ksd1.a56bim ksd1.a56bim ksd2.a56bim ksd2.a56bim "
-    "ksd1.a45bim ksd1.a45bim ksd2.a45bim ksd2.a45bim"
+    "ksd1.a12bim ksd2.a12bim ksd1.a81bim ksd2.a81bim "
+    "ksd1.a56bim ksd2.a56bim ksd1.a45bim ksd2.a45bim"
 )
 
 
@@ -262,11 +258,11 @@ def rematch_w(collider, bim, solve=False, nsteps=4, kill_old_vals=False):
     tar_iy5 = 0.5 * (tw_l5.ay_chrom[-1] - tw_r5.ay_chrom[-1])
 
     import numpy as np
+
     tar_ix1 = 0.5 * (np.abs(tw_l1.ax_chrom[-1]) - np.abs(tw_r1.ax_chrom[0]))
     tar_iy1 = 0.5 * (np.abs(tw_l1.ay_chrom[-1]) - np.abs(tw_r1.ay_chrom[0]))
     tar_ix5 = 0.5 * (np.abs(tw_l5.ax_chrom[-1]) - np.abs(tw_r5.ax_chrom[0]))
     tar_iy5 = 0.5 * (np.abs(tw_l5.ay_chrom[-1]) - np.abs(tw_r5.ay_chrom[0]))
-
 
     # tar_ix1 = 0.5 * (np.sum(tw_l1.ax_chrom) - np.sum(tw_r1.ax_chrom))
     # tar_iy1 = 0.5 * (np.sum(tw_l1.ay_chrom) - np.sum(tw_r1.ay_chrom))
