@@ -418,3 +418,25 @@ def set_limits_steps_sextupoles_w(collider, step=1e-4):
         "ksd2.a56b2": {"step": step, "limits": (-k2max, k2max)},
     }
     collider.vars.vary_default.update(sextupoles_defaults)
+
+
+def set_limits_steps_ahvcrab(collider, step=1e-10):
+    ahvcrab_default = {
+        "ahcrab_l1b1": {"step": step, "limits": None},
+        "ahcrab_r1b1": {"step": step, "limits": None},
+        "ahcrab_l1b2": {"step": step, "limits": None},
+        "ahcrab_r1b2": {"step": step, "limits": None},
+        "ahcrab_l5b1": {"step": step, "limits": None},
+        "ahcrab_r5b1": {"step": step, "limits": None},
+        "ahcrab_l5b2": {"step": step, "limits": None},
+        "ahcrab_r5b2": {"step": step, "limits": None},
+        "avcrab_l1b1": {"step": step, "limits": None},
+        "avcrab_r1b1": {"step": step, "limits": None},
+        "avcrab_l1b2": {"step": step, "limits": None},
+        "avcrab_r1b2": {"step": step, "limits": None},
+        "avcrab_l5b1": {"step": step, "limits": None},
+        "avcrab_r5b1": {"step": step, "limits": None},
+        "avcrab_l5b2": {"step": step, "limits": None},
+        "avcrab_r5b2": {"step": step, "limits": None},
+    }
+    collider.vars.vary_default.update(ahvcrab_default)
