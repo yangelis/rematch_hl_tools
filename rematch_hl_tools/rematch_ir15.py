@@ -44,6 +44,7 @@ def rematch_ir15(
     ratio_at_CC=1.0,
     beta_peak_ratio=0.995,
     n_steps=25,
+    extra_targets=None,
 ):
     """Match IP5 for the beta_x, beta_y, and copy strenghts to IP1
 
@@ -198,6 +199,14 @@ def rematch_ir15(
                 muy=muyIP5b2,
             )
         )
+
+    if extra_targets is not None:
+        if isinstance(extra_targets, xt.Target) or isinstance(
+            extra_targets, xt.TargetSet
+        ):
+            targets.append(extra_targets)
+        if isinstance(extra_targets, list):
+            targets += extra_targets
 
     vary_list = []
 
