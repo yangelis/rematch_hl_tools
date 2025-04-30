@@ -1,4 +1,3 @@
-from numpy import pi
 import xtrack as xt
 
 
@@ -1562,15 +1561,26 @@ def rename_knobs_as_madx(collider):
     v["phi_ir5"] = 90.0
     v["cd2q4"] = 0
     for irn in [1, 5]:
-        v[f"cphi_ir{irn}"] = f.cos(v[f"phi_ir{irn}"] * pi / 180.0)
-        v[f"sphi_ir{irn}"] = f.sin(v[f"phi_ir{irn}"] * pi / 180.0)
-        v[f"on_x{irn}hs"] = (1.0 - v["cd2q4"]) * v[f"on_x{irn}"] * v[f"cphi_ir{irn}"]
-        v[f"on_x{irn}hl"] = v["cd2q4"] * v[f"on_x{irn}"] * v[f"cphi_ir{irn}"]
-        v[f"on_x{irn}vs"] = (1.0 - v["cd2q4"]) * v[f"on_x{irn}"] * v[f"sphi_ir{irn}"]
-        v[f"on_x{irn}vl"] = v["cd2q4"] * v[f"on_x{irn}"] * v[f"sphi_ir{irn}"]
+        v[f"cphi_ir{irn}"] = f.cos(v[f"phi_ir{irn}"] * v['pi'] / 180.0)
+        v[f"sphi_ir{irn}"] = f.sin(v[f"phi_ir{irn}"] * v['pi'] / 180.0)
+        v[f"on_x{irn}hs"]  =  (1.0 - v["cd2q4"]) * v[f"on_x{irn}"] * v[f"cphi_ir{irn}"]
+        v[f"on_x{irn}hl"]  =  v["cd2q4"] * v[f"on_x{irn}"] * v[f"cphi_ir{irn}"]
+        v[f"on_x{irn}vs"]  =  (1.0 - v["cd2q4"]) * v[f"on_x{irn}"] * v[f"sphi_ir{irn}"]
+        v[f"on_x{irn}vl"]  =  v["cd2q4"] * v[f"on_x{irn}"] * v[f"sphi_ir{irn}"]
         v[f"on_sep{irn}h"] = -v[f"on_sep{irn}"] * v[f"sphi_ir{irn}"]
-        v[f"on_sep{irn}v"] = v[f"on_sep{irn}"] * v[f"cphi_ir{irn}"]
-        v[f"on_a{irn}h"] = -v[f"on_a{irn}"] * v[f"sphi_ir{irn}"]
-        v[f"on_a{irn}v"] = v[f"on_a{irn}"] * v[f"cphi_ir{irn}"]
-        v[f"on_o{irn}h"] = v[f"on_o{irn}"] * v[f"cphi_ir{irn}"]
-        v[f"on_o{irn}v"] = v[f"on_o{irn}"] * v[f"sphi_ir{irn}"]
+        v[f"on_sep{irn}v"] =  v[f"on_sep{irn}"] * v[f"cphi_ir{irn}"]
+        v[f"on_a{irn}h"]   = -v[f"on_a{irn}"] * v[f"sphi_ir{irn}"]
+        v[f"on_a{irn}v"]   =  v[f"on_a{irn}"] * v[f"cphi_ir{irn}"]
+        v[f"on_o{irn}h"]   =  v[f"on_o{irn}"] * v[f"cphi_ir{irn}"]
+        v[f"on_o{irn}v"]   =  v[f"on_o{irn}"] * v[f"sphi_ir{irn}"]
+
+
+        v[f'xip{irn}b1'] = +1e-3*v[f'on_sep{irn}h'] + 1e-3*v[f'on_o{irn}h']
+        v[f'xip{irn}b2'] = -1e-3*v[f'on_sep{irn}h'] + 1e-3*v[f'on_o{irn}h']
+        v[f'yip{irn}b1'] = +1e-3*v[f'on_sep{irn}v'] + 1e-3*v[f'on_o{irn}v']
+        v[f'yip{irn}b2'] = -1e-3*v[f'on_sep{irn}v'] + 1e-3*v[f'on_o{irn}v']
+
+        v[f'pxip{irn}b1'] = +1e-6*v[f'on_x{irn}hs'] + 1e-6*v[f'on_x{irn}hl'] + 1e-6*v[f'on_a{irn}h']
+        v[f'pxip{irn}b2'] = -1e-6*v[f'on_x{irn}hs'] - 1e-6*v[f'on_x{irn}hl'] + 1e-6*v[f'on_a{irn}h']
+        v[f'pyip{irn}b1'] = +1e-6*v[f'on_x{irn}vs'] + 1e-6*v[f'on_x{irn}vl'] + 1e-6*v[f'on_a{irn}v']
+        v[f'pyip{irn}b2'] = -1e-6*v[f'on_x{irn}vs'] - 1e-6*v[f'on_x{irn}vl'] + 1e-6*v[f'on_a{irn}v']
