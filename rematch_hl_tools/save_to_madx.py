@@ -2,13 +2,19 @@ import xtrack as xt
 import xtrack._temp.lhc_match as lm
 
 
-def clean_expr(expr):
+def clean_expr2(expr):
     return (
-        str(expr)
-        .replace("vars['", "")
+        expr.replace("vars['", "")
         .replace("f.", "")
         .replace("']", "")
         .replace("None", "0")
+    )
+
+
+def clean_expr(expr):
+    a = str(expr)
+    return (
+        a.replace("vars['", "").replace("f.", "").replace("']", "").replace("None", "0")
     )
 
 
@@ -202,7 +208,8 @@ def _save_optics_orbconf15(collider, ip):
     )
     for param in params_ip15.split():
         pname = param.replace("IRN", str(ip))
-        expr = clean_expr(collider.vars[pname]._expr)
+        sexpr = str(collider.vars[pname]._expr)
+        expr = clean_expr2(sexpr)
         lines.append(f"{pname:10} := {expr} ;")
 
     return lines
@@ -217,7 +224,8 @@ def _save_optics_orbconf28(collider, ip):
     )
     for param in params_ip28.split():
         pname = param.replace("IRN", ip)
-        expr = clean_expr(collider.vars[pname]._expr)
+        sexpr = str(collider.vars[pname]._expr)
+        expr = clean_expr2(sexpr)
         lines.append(f"{pname:10} := {expr} ;")
 
     return lines
@@ -321,7 +329,7 @@ def _save_optics_arcs(collider):
 
         for kflag in ["f", "d"]:
             for arc in arc_group_non_ats:
-                kname = "kqt" + kflag + f".a{arc}{bim}"
+                kname = f"kqt{kflag}.a{arc}{bim}"
                 expr = (
                     str(collider.vars[kname]._expr)
                     .replace("vars['", "")

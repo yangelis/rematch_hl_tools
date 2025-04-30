@@ -240,7 +240,7 @@ def save_vals_and_reset_cc(knobs_vals, collider, optimizer, matched_val, knob):
         collider.vars[vary.name] = 0
 
 
-def match_orbit_knobs_ip15(
+def match_orbit_knobs_ip15_manual(
     collider,
     tolerances=None,
     first_pass=True,

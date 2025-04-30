@@ -73,14 +73,17 @@ def rematch_ir15(
         Flag to connect Q4
         0 : Connect Q4 left for both beams and Q4 right for both beams
         1 : Connect Q4 left and right
+        2 : All free
     ir5q5sym: int
         Flag to connect Q5
         0 : Connect Q5 left for both beams and Q5 right for both beams
         1 : Connect Q5 left and right
+        2 : All free
     ir5q6sym: int
         Flag to connect Q6
         0 : Connect Q6 left for both beams and Q6 right for both beams
         1 : Connect Q6 left and right
+        2 : All free
     restore: bool
         Flag to restore the variables if the match fails
     solve: bool
@@ -245,6 +248,12 @@ def rematch_ir15(
         connect_lr_qs(collider, nq=4, ir=5, bim=2)
         vary_list.append(xt.Vary("kq4.l5b1"))
         vary_list.append(xt.Vary("kq4.l5b2"))
+    elif ir5q4sym == 2:
+        # All free
+        vary_list.append(xt.Vary("kq4.l5b1"))
+        vary_list.append(xt.Vary("kq4.r5b1"))
+        vary_list.append(xt.Vary("kq4.l5b2"))
+        vary_list.append(xt.Vary("kq4.r5b2"))
 
     if ir5q5sym == 0:
         collider.vars["imq5l"] = (
@@ -281,6 +290,11 @@ def rematch_ir15(
         connect_lr_qs(collider, nq=5, ir=5, bim=2)
         vary_list.append(xt.Vary("kq5.l5b1"))
         vary_list.append(xt.Vary("kq5.l5b2"))
+    elif ir5q5sym == 2:
+        vary_list.append(xt.Vary("kq5.l5b1"))
+        vary_list.append(xt.Vary("kq5.r5b1"))
+        vary_list.append(xt.Vary("kq5.l5b2"))
+        vary_list.append(xt.Vary("kq5.r5b2"))
 
     if ir5q6sym == 0:
         collider.vars["imq6l"] = (
@@ -317,6 +331,11 @@ def rematch_ir15(
         connect_lr_qs(collider, nq=6, ir=5, bim=2)
         vary_list.append(xt.Vary("kq6.l5b1"))
         vary_list.append(xt.Vary("kq6.l5b2"))
+    elif ir5q6sym == 2:
+        vary_list.append(xt.Vary("kq6.l5b1"))
+        vary_list.append(xt.Vary("kq6.r5b1"))
+        vary_list.append(xt.Vary("kq6.l5b2"))
+        vary_list.append(xt.Vary("kq6.r5b2"))
 
     quads_ir5_b1 = (
         "kq4.l5b1 kq4.r5b1 kq5.l5b1 kq5.r5b1 kq6.l5b1 kq6.r5b1 "
