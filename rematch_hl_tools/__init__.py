@@ -1,8 +1,20 @@
 from .match_limits_steps import *
 
 from .build_hllhc import build_collider
-from .rematch_tune_chroma import rematch_tune, rematch_chroma
-from .rematch_irs import rematch_ir6
+
+from .rematch_tune_chroma import (
+    default_tune_chroma_targets,
+    rematch_tune,
+    rematch_tune_non_ats,
+    rematch_chroma,
+)
+
+from .rematch_irs import (
+    update_stored_vals_ips,
+    rematch_ir6,
+    rematch_new_ir7,
+)
+
 from .rematch_ir15 import *
 from .rematch_xing15 import *
 from .rematch_w import *

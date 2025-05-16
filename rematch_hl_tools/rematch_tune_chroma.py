@@ -33,6 +33,43 @@ def rematch_tune(collider, targets=None, default_targets=False, solve=False):
     return optimizers
 
 
+def rematch_tune_non_ats(collider, targets=None, default_targets=False, solve=False):
+    if default_targets and targets is None:
+        targets = default_tune_chroma_targets()
+
+    optimizers = {}
+    for line_name in collider.line_names:
+        bim = line_name[-2:]
+        opt = collider[line_name].match(
+            solve=False,
+            assert_within_tol=False,
+            restore_if_fail=False,
+            verbose=False,
+            n_steps_max=5,
+            targets=[
+                xt.TargetSet(qx=targets[bim]["qx"], qy=targets[bim]["qy"], tol=1e-6)
+            ],
+            vary=xt.VaryList(
+                [
+                    f"kqtf.a23{bim}",
+                    f"kqtd.a23{bim}",
+                    f"kqtf.a34{bim}",
+                    f"kqtd.a34{bim}",
+                    f"kqtf.a67{bim}",
+                    f"kqtd.a67{bim}",
+                    f"kqtf.a78{bim}",
+                    f"kqtd.a78{bim}",
+                ],
+                step=1e-8,
+            ),
+        )
+
+        if solve:
+            opt.solve()
+        optimizers[bim] = opt
+    return optimizers
+
+
 def rematch_chroma(collider, targets=None, default_targets=False, solve=False):
     if default_targets and targets is None:
         targets = default_tune_chroma_targets()
