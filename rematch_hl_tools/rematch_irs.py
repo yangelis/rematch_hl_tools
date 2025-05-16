@@ -62,15 +62,15 @@ def update_stored_vals_ips(collider):
         v[f'muxip6{bim}'] = tw[f'lhc{bim}']['mux',f'e.ds.r6.{bim}'] - tw[f'lhc{bim}']['mux','ip5'] - v[f'muxip5{bim}_r'] - tw45_56_xt[f'lhc{bim}']['56'].mux[-1]
         v[f'muxip8{bim}'] = tw[f'lhc{bim}']['mux','ip1'] - tw[f'lhc{bim}']['mux',f's.ds.l8.{bim}'] - v[f'muxip1{bim}_l'] - tw81_12_xt[f'lhc{bim}']['81'].mux[-1]
         v[f'muxip4{bim}'] = tw[f'lhc{bim}']['mux','ip5'] - tw[f'lhc{bim}']['mux',f's.ds.l4.{bim}'] - v[f'muxip5{bim}_l'] - tw45_56_xt[f'lhc{bim}']['45'].mux[-1]
-        v[f'muxip3{bim}'] = tw[f'lhc{bim}']['mux',f'e.ds.r3.{bim}'] - tw[f'lhc{bim}']['mux',f'e.ds.l3.{bim}'] 
-        v[f'muxip7{bim}'] = tw[f'lhc{bim}']['mux',f'e.ds.r7.{bim}'] - tw[f'lhc{bim}']['mux',f'e.ds.l7.{bim}'] 
+        v[f'muxip3{bim}'] = tw[f'lhc{bim}']['mux',f'e.ds.r3.{bim}'] - tw[f'lhc{bim}']['mux',f's.ds.l3.{bim}'] 
+        v[f'muxip7{bim}'] = tw[f'lhc{bim}']['mux',f'e.ds.r7.{bim}'] - tw[f'lhc{bim}']['mux',f's.ds.l7.{bim}'] 
 
         v[f'muyip2{bim}'] = tw[f'lhc{bim}']['muy',f'e.ds.r2.{bim}'] - tw[f'lhc{bim}']['muy','ip1'] - v[f'muyip1{bim}_r'] - tw81_12_xt[f'lhc{bim}']['12'].muy[-1]
         v[f'muyip6{bim}'] = tw[f'lhc{bim}']['muy',f'e.ds.r6.{bim}'] - tw[f'lhc{bim}']['muy','ip5'] - v[f'muyip5{bim}_l'] - tw45_56_xt[f'lhc{bim}']['56'].muy[-1]
         v[f'muyip8{bim}'] = tw[f'lhc{bim}']['muy','ip1'] - tw[f'lhc{bim}']['muy',f's.ds.l8.{bim}'] - v[f'muyip1{bim}_l'] - tw81_12_xt[f'lhc{bim}']['81'].muy[-1]
         v[f'muyip4{bim}'] = tw[f'lhc{bim}']['muy','ip5'] - tw[f'lhc{bim}']['muy',f's.ds.l4.{bim}'] - v[f'muyip5{bim}_l'] - tw45_56_xt[f'lhc{bim}']['45'].muy[-1]
-        v[f'muyip3{bim}'] = tw[f'lhc{bim}']['muy',f'e.ds.r3.{bim}'] - tw[f'lhc{bim}']['muy',f'e.ds.l3.{bim}'] 
-        v[f'muyip7{bim}'] = tw[f'lhc{bim}']['muy',f'e.ds.r7.{bim}'] - tw[f'lhc{bim}']['muy',f'e.ds.l7.{bim}'] 
+        v[f'muyip3{bim}'] = tw[f'lhc{bim}']['muy',f'e.ds.r3.{bim}'] - tw[f'lhc{bim}']['muy',f's.ds.l3.{bim}'] 
+        v[f'muyip7{bim}'] = tw[f'lhc{bim}']['muy',f'e.ds.r7.{bim}'] - tw[f'lhc{bim}']['muy',f's.ds.l7.{bim}'] 
 
 
         v[f'muxip2{bim}_l'] = tw[f'lhc{bim}']['mux','ip2'] - tw[f'lhc{bim}']['mux','ip1'] - v[f'muxip1{bim}_r'] - tw81_12_xt[f'lhc{bim}']['12'].mux[-1]
