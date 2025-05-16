@@ -9,6 +9,26 @@ default_tol = {
 }  # to have no rematching w.r.t. madx
 
 
+def get_presqueezed_tw(env, ip):
+
+    arcs = ["81", "12"] if ip == 1 else ["45", "56"] if ip == 5 else [0, 0]
+
+    tw_ats_arcs = lm.get_arc_periodic_solution(env, arc_name=arcs)
+    beta0_b1 = tw_ats_arcs["lhcb1"][arcs[0]].get_twiss_init(f"s.ds.l{ip}.b1")
+    beta0_b1.mux = 0
+    beta0_b1.muy = 0
+    beta0_b2 = tw_ats_arcs["lhcb2"][arcs[0]].get_twiss_init(f"s.ds.l{ip}.b2")
+    beta0_b2.mux = 0
+    beta0_b2.muy = 0
+
+    tw_ip = env.twiss(
+        start=[f"s.ds.l{ip}.b1", f"s.ds.l{ip}.b2"],
+        end=[f"e.ds.r{ip}.b1", f"e.ds.r{ip}.b2"],
+        init=[beta0_b1, beta0_b2],
+    )
+
+    return tw_ip
+
 def connect_lr_qx(collider, nqx=0, ir=5):
     """Connect specified right kqx in IP5 of IP1 with the left kqx"""
     assert ir == 1 or ir == 5
@@ -387,6 +407,7 @@ def rematch_ir15(
         connect_lr_qx(collider, 3)
         vary_list.append(xt.Vary("kqx1.l5"))
         vary_list.append(xt.Vary("kqx2a.l5"))
+        vary_list.append(xt.Vary("kqx3.l5"))
         # Ratio of max betas in x and y
         targets.append(
             xt.Target(
