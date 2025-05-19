@@ -14,6 +14,7 @@ from .rematch_irs import (
     rematch_ir6,
     rematch_new_ir7,
 )
+from .rematch_ir6 import *
 
 from .rematch_ir15 import *
 from .rematch_xing15 import *
