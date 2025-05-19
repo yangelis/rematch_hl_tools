@@ -666,51 +666,66 @@ def set_limits_steps_ir4(collider, nrj=7000):
 
 def set_limits_steps_ir6(collider, nrj=7000):
     scmin = 0.03 * 7000.0 / nrj
+
+    qtlimit2 = sch * 160.0 / scale
+    qtlimit3 = sch * 200.0 / scale
+    qtlimit4 = sch * 125.0 / scale
+    qtlimit5 = sch * 120.0 / scale
+    qtlimit6 = sch * 90.0 / scale
+
+    q5l6_lim = 173.2
+    q5r6_lim = 173.2
+
+    qtlimit5l = sch * q5l6_lim / scale
+    qtlimit5r = sch * q5r6_lim / scale
+
     ir6_defaults = {
-        "kqt13.l6b1": {"step": 1.0e-6, "limits": (-qtlim5, qtlim5)},
-        "kqt12.l6b1": {"step": 1.0e-6, "limits": (-qtlim5, qtlim5)},
+        # Beam 1
+        "kqt13.l6b1": {"step": 1.0e-6, "limits": (-qtlimit5, qtlimit5)},
+        "kqt12.l6b1": {"step": 1.0e-6, "limits": (-qtlimit5, qtlimit5)},
         "kqtl11.l6b1": {
             "step": 1.0e-6,
-            "limits": (-qtlim4 * 400.0 / 550.0, qtlim4 * 400.0 / 550.0),
+            "limits": (-qtlimit4 * 400.0 / 550.0, qtlimit4 * 400.0 / 550.0),
         },
-        "kq10.l6b1": {"step": 1.0e-6, "limits": (-qtlim3, qtlim3 * scmin)},
-        "kq9.l6b1": {"step": 1.0e-6, "limits": (qtlim3 * scmin, qtlim3)},
-        "kq8.l6b1": {"step": 1.0e-6, "limits": (-qtlim3, qtlim3 * scmin)},
-        "kq5.l6b1": {"step": 1.0e-6, "limits": (qtlim2 * scmin, qtlim2)},
-        "kq4.l6b1": {"step": 1.0e-6, "limits": (-qtlim2, qtlim2 * scmin)},
-        "kq4.r6b1": {"step": 1.0e-6, "limits": (qtlim2 * scmin, qtlim2)},
-        "kq5.r6b1": {"step": 1.0e-6, "limits": (-qtlim2, qtlim2 * scmin)},
-        "kq8.r6b1": {"step": 1.0e-6, "limits": (qtlim3 * scmin, qtlim3)},
-        "kq9.r6b1": {"step": 1.0e-6, "limits": (-qtlim3, qtlim3 * scmin)},
-        "kq10.r6b1": {"step": 1.0e-6, "limits": (qtlim3 * scmin, qtlim3)},
+        "kq10.l6b1": {"step": 1.0e-6, "limits": (-qtlimit3, -qtlimit3 * scmin)},
+        "kq9.l6b1": {"step": 1.0e-6, "limits": (qtlimit3 * scmin, qtlimit3)},
+        "kq8.l6b1": {"step": 1.0e-6, "limits": (-qtlimit3, -qtlimit3 * scmin)},
+        "kq5.l6b1": {"step": 1.0e-6, "limits": (qtlimit5l * scmin, qtlimit5l)},
+        "kq4.l6b1": {"step": 1.0e-6, "limits": (-qtlimit2, -qtlimit2 * scmin)},
+        "kq4.r6b1": {"step": 1.0e-6, "limits": (qtlimit2 * scmin, qtlimit2)},
+        "kq5.r6b1": {"step": 1.0e-6, "limits": (-qtlimit5r, -qtlimit5r * scmin)},
+        "kq8.r6b1": {"step": 1.0e-6, "limits": (qtlimit3 * scmin, qtlimit3)},
+        "kq9.r6b1": {"step": 1.0e-6, "limits": (-qtlimit3, -qtlimit3 * scmin)},
+        "kq10.r6b1": {"step": 1.0e-6, "limits": (qtlimit3 * scmin, qtlimit3)},
         "kqtl11.r6b1": {
             "step": 1.0e-6,
-            "limits": (-qtlim4 * 300.0 / 550.0, qtlim4 * 300.0 / 550.0),
+            "limits": (-qtlimit4 * 300.0 / 550.0, qtlimit4 * 300.0 / 550.0),
         },
-        "kqt12.r6b1": {"step": 1.0e-6, "limits": (-qtlim5, qtlim5)},
-        "kqt13.r6b1": {"step": 1.0e-6, "limits": (-qtlim5, qtlim5)},
-        "kqt13.l6b2": {"step": 1.0e-6, "limits": (-qtlim5, qtlim5)},
-        "kqt12.l6b2": {"step": 1.0e-6, "limits": (-qtlim5, qtlim5)},
+        "kqt12.r6b1": {"step": 1.0e-6, "limits": (-qtlimit5, qtlimit5)},
+        "kqt13.r6b1": {"step": 1.0e-6, "limits": (-qtlimit5, qtlimit5)},
+        # Beam 2
+        "kqt13.l6b2": {"step": 1.0e-6, "limits": (-qtlimit5, qtlimit5)},
+        "kqt12.l6b2": {"step": 1.0e-6, "limits": (-qtlimit5, qtlimit5)},
         "kqtl11.l6b2": {
             "step": 1.0e-6,
-            "limits": (-qtlim4 * 400.0 / 550.0, qtlim4 * 400.0 / 550.0),
+            "limits": (-qtlimit4 * 400.0 / 550.0, qtlimit4 * 400.0 / 550.0),
         },
-        "kq10.l6b2": {"step": 1.0e-6, "limits": (qtlim3 * scmin, qtlim3)},
-        "kq9.l6b2": {"step": 1.0e-6, "limits": (-qtlim3, qtlim3 * scmin)},
-        "kq8.l6b2": {"step": 1.0e-6, "limits": (qtlim3 * scmin, qtlim3)},
-        "kq5.l6b2": {"step": 1.0e-6, "limits": (-qtlim3, qtlim3 * scmin)},
-        "kq4.l6b2": {"step": 1.0e-6, "limits": (qtlim2 * scmin, qtlim2)},
-        "kq4.r6b2": {"step": 1.0e-6, "limits": (-qtlim2, qtlim2 * scmin)},
-        "kq5.r6b2": {"step": 1.0e-6, "limits": (qtlim3 * scmin, qtlim3)},
-        "kq8.r6b2": {"step": 1.0e-6, "limits": (-qtlim3, qtlim3 * scmin)},
-        "kq9.r6b2": {"step": 1.0e-6, "limits": (qtlim3 * scmin, qtlim3)},
-        "kq10.r6b2": {"step": 1.0e-6, "limits": (-qtlim3, qtlim3 * scmin)},
+        "kq10.l6b2": {"step": 1.0e-6, "limits": (qtlimit3 * scmin, qtlimit3)},
+        "kq9.l6b2": {"step": 1.0e-6, "limits": (-qtlimit3, -qtlimit3 * scmin)},
+        "kq8.l6b2": {"step": 1.0e-6, "limits": (qtlimit3 * scmin, qtlimit3)},
+        "kq5.l6b2": {"step": 1.0e-6, "limits": (-qtlimit5l, -qtlimit5l * scmin)},
+        "kq4.l6b2": {"step": 1.0e-6, "limits": (qtlimit2 * scmin, qtlimit2)},
+        "kq4.r6b2": {"step": 1.0e-6, "limits": (-qtlimit2, -qtlimit2 * scmin)},
+        "kq5.r6b2": {"step": 1.0e-6, "limits": (qtlimit5r * scmin, qtlimit5r)},
+        "kq8.r6b2": {"step": 1.0e-6, "limits": (-qtlimit3, -qtlimit3 * scmin)},
+        "kq9.r6b2": {"step": 1.0e-6, "limits": (qtlimit3 * scmin, qtlimit3)},
+        "kq10.r6b2": {"step": 1.0e-6, "limits": (-qtlimit3, -qtlimit3 * scmin)},
         "kqtl11.r6b2": {
             "step": 1.0e-6,
-            "limits": (-qtlim4 * 300.0 / 550.0, qtlim4 * 300.0 / 550.0),
+            "limits": (-qtlimit4 * 300.0 / 550.0, qtlimit4 * 300.0 / 550.0),
         },
-        "kqt12.r6b2": {"step": 1.0e-6, "limits": (-qtlim5, qtlim5)},
-        "kqt13.r6b2": {"step": 1.0e-6, "limits": (-qtlim5, qtlim5)},
+        "kqt12.r6b2": {"step": 1.0e-6, "limits": (-qtlimit5, qtlimit5)},
+        "kqt13.r6b2": {"step": 1.0e-6, "limits": (-qtlimit5, qtlimit5)},
     }
     collider.vars.vary_default.update(ir6_defaults)
 
