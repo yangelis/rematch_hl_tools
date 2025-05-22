@@ -801,6 +801,11 @@ def set_limits_steps_ir7(collider, nrj=7000):
         "kqtl11.r7b2": {"step": 1.0e-9, "limits": (-qtlim4, qtlim4)},
         "kqt12.r7b2": {"step": 1.0e-9, "limits": (-qtlim5, qtlim5)},
         "kqt13.r7b2": {"step": 1.0e-9, "limits": (-qtlim5, qtlim5)},
+        # TODO: check 
+        "kq4.lr7": {"step": 1e-9, "limits": (0.00085, 0.0304)},
+        "kq5.lr7": {"step": 1e-9, "limits": (-0.0304,-0.00085)},
+        "kqt4.l7": {"step": 1e-6, "limits": (-0.0257, 0.0257)},
+        "kqt4.r7": {"step": 1e-6, "limits": (-0.0257, 0.0257)},
     }
     collider.vars.vary_default.update(ir7_defaults)
 
