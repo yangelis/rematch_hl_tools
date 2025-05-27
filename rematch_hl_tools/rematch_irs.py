@@ -2,101 +2,242 @@ import xtrack as xt
 from xtrack._temp.lhc_match import get_arc_periodic_solution
 from .rematch_ir15 import get_presqueezed_tw
 
+
 def update_stored_vals_ips(collider):
     v = collider.vars
     tw = collider.twiss()
     tw81_12_xt = get_arc_periodic_solution(collider, arc_name=["81", "12"])
     tw45_56_xt = get_arc_periodic_solution(collider, arc_name=["45", "56"])
-    tw_non_ats_arcs = get_arc_periodic_solution(collider, arc_name=["23", "34", "67", "78"])
+    tw_non_ats_arcs = get_arc_periodic_solution(
+        collider, arc_name=["23", "34", "67", "78"]
+    )
 
     tw_ip1 = get_presqueezed_tw(collider, 1)
     tw_ip5 = get_presqueezed_tw(collider, 5)
-    
 
-    v["betx0_ip1"] = tw_ip1['lhcb1']["betx", "ip1"]
-    v["bety0_ip1"] = tw_ip1['lhcb1']["bety", "ip1"]
-    v["betx0_ip5"] = tw_ip5['lhcb1']["betx", "ip5"]
-    v["bety0_ip5"] = tw_ip5['lhcb1']["bety", "ip5"]
+    v["betx0_ip1"] = tw_ip1["lhcb1"]["betx", "ip1"]
+    v["bety0_ip1"] = tw_ip1["lhcb1"]["bety", "ip1"]
+    v["betx0_ip5"] = tw_ip5["lhcb1"]["betx", "ip5"]
+    v["bety0_ip5"] = tw_ip5["lhcb1"]["bety", "ip5"]
 
     # PHASES IP1
-    v["muxip1b1"] = tw_ip1['lhcb1']["mux", "e.ds.r1.b1"] - tw_ip1['lhcb1']["mux", "s.ds.l1.b1"]
-    v["muyip1b1"] = tw_ip1['lhcb1']["muy", "e.ds.r1.b1"] - tw_ip1['lhcb1']["muy", "s.ds.l1.b1"]
-    v["muxip1b1_l"] = tw_ip1['lhcb1']["mux", "ip1"] - tw_ip1['lhcb1']["mux", "s.ds.l1.b1"]
-    v["muyip1b1_l"] = tw_ip1['lhcb1']["muy", "ip1"] - tw_ip1['lhcb1']["muy", "s.ds.l1.b1"]
-    v["muxip1b1_r"] = tw_ip1['lhcb1']["mux", "e.ds.r1.b1"] - tw_ip1['lhcb1']["mux", "ip1"]
-    v["muyip1b1_r"] = tw_ip1['lhcb1']["muy", "e.ds.r1.b1"] - tw_ip1['lhcb1']["muy", "ip1"]
+    v["muxip1b1"] = (
+        tw_ip1["lhcb1"]["mux", "e.ds.r1.b1"] - tw_ip1["lhcb1"]["mux", "s.ds.l1.b1"]
+    )
+    v["muyip1b1"] = (
+        tw_ip1["lhcb1"]["muy", "e.ds.r1.b1"] - tw_ip1["lhcb1"]["muy", "s.ds.l1.b1"]
+    )
+    v["muxip1b1_l"] = (
+        tw_ip1["lhcb1"]["mux", "ip1"] - tw_ip1["lhcb1"]["mux", "s.ds.l1.b1"]
+    )
+    v["muyip1b1_l"] = (
+        tw_ip1["lhcb1"]["muy", "ip1"] - tw_ip1["lhcb1"]["muy", "s.ds.l1.b1"]
+    )
+    v["muxip1b1_r"] = (
+        tw_ip1["lhcb1"]["mux", "e.ds.r1.b1"] - tw_ip1["lhcb1"]["mux", "ip1"]
+    )
+    v["muyip1b1_r"] = (
+        tw_ip1["lhcb1"]["muy", "e.ds.r1.b1"] - tw_ip1["lhcb1"]["muy", "ip1"]
+    )
 
-    v["muxip1b2"] = tw_ip1['lhcb2']["mux", "e.ds.r1.b2"] - tw_ip1['lhcb2']["mux", "s.ds.l1.b2"]
-    v["muyip1b2"] = tw_ip1['lhcb2']["muy", "e.ds.r1.b2"] - tw_ip1['lhcb2']["muy", "s.ds.l1.b2"]
-    v["muxip1b2_l"] = tw_ip1['lhcb2']["mux", "ip1"]
-    v["muyip1b2_l"] = tw_ip1['lhcb2']["muy", "ip1"]
-    v["muxip1b2_r"] = tw_ip1['lhcb2']["mux", "e.ds.r1.b2"] - tw_ip1['lhcb2']["mux", "ip1"]
-    v["muyip1b2_r"] = tw_ip1['lhcb2']["muy", "e.ds.r1.b2"] - tw_ip1['lhcb2']["muy", "ip1"]
+    v["muxip1b2"] = (
+        tw_ip1["lhcb2"]["mux", "e.ds.r1.b2"] - tw_ip1["lhcb2"]["mux", "s.ds.l1.b2"]
+    )
+    v["muyip1b2"] = (
+        tw_ip1["lhcb2"]["muy", "e.ds.r1.b2"] - tw_ip1["lhcb2"]["muy", "s.ds.l1.b2"]
+    )
+    v["muxip1b2_l"] = tw_ip1["lhcb2"]["mux", "ip1"]
+    v["muyip1b2_l"] = tw_ip1["lhcb2"]["muy", "ip1"]
+    v["muxip1b2_r"] = (
+        tw_ip1["lhcb2"]["mux", "e.ds.r1.b2"] - tw_ip1["lhcb2"]["mux", "ip1"]
+    )
+    v["muyip1b2_r"] = (
+        tw_ip1["lhcb2"]["muy", "e.ds.r1.b2"] - tw_ip1["lhcb2"]["muy", "ip1"]
+    )
 
     # PHASES IP5
-    v["muxip5b1"] = tw_ip5['lhcb1']["mux", "e.ds.r5.b1"] - tw_ip5['lhcb1']["mux", "s.ds.l5.b1"]
-    v["muyip5b1"] = tw_ip5['lhcb1']["muy", "e.ds.r5.b1"] - tw_ip5['lhcb1']["muy", "s.ds.l5.b1"]
-    v["muxip5b1_l"] = tw_ip5['lhcb1']["mux", "ip5"] - tw_ip5['lhcb1']["mux", "s.ds.l5.b1"]
-    v["muyip5b1_l"] = tw_ip5['lhcb1']["muy", "ip5"] - tw_ip5['lhcb1']["muy", "s.ds.l5.b1"]
-    v["muxip5b1_r"] = tw_ip5['lhcb1']["mux", "e.ds.r5.b1"] - tw_ip5['lhcb1']["mux", "ip5"]
-    v["muyip5b1_r"] = tw_ip5['lhcb1']["muy", "e.ds.r5.b1"] - tw_ip5['lhcb1']["muy", "ip5"]
+    v["muxip5b1"] = (
+        tw_ip5["lhcb1"]["mux", "e.ds.r5.b1"] - tw_ip5["lhcb1"]["mux", "s.ds.l5.b1"]
+    )
+    v["muyip5b1"] = (
+        tw_ip5["lhcb1"]["muy", "e.ds.r5.b1"] - tw_ip5["lhcb1"]["muy", "s.ds.l5.b1"]
+    )
+    v["muxip5b1_l"] = (
+        tw_ip5["lhcb1"]["mux", "ip5"] - tw_ip5["lhcb1"]["mux", "s.ds.l5.b1"]
+    )
+    v["muyip5b1_l"] = (
+        tw_ip5["lhcb1"]["muy", "ip5"] - tw_ip5["lhcb1"]["muy", "s.ds.l5.b1"]
+    )
+    v["muxip5b1_r"] = (
+        tw_ip5["lhcb1"]["mux", "e.ds.r5.b1"] - tw_ip5["lhcb1"]["mux", "ip5"]
+    )
+    v["muyip5b1_r"] = (
+        tw_ip5["lhcb1"]["muy", "e.ds.r5.b1"] - tw_ip5["lhcb1"]["muy", "ip5"]
+    )
 
-    v["muxip5b2"] = tw_ip5['lhcb2']["mux", "e.ds.r5.b2"] - tw_ip5['lhcb2']["mux", "s.ds.l5.b2"]
-    v["muyip5b2"] = tw_ip5['lhcb2']["muy", "e.ds.r5.b2"] - tw_ip5['lhcb2']["muy", "s.ds.l5.b2"]
-    v["muxip5b2_l"] = tw_ip5['lhcb2']["mux", "ip5"]
-    v["muyip5b2_l"] = tw_ip5['lhcb2']["muy", "ip5"]
-    v["muxip5b2_r"] = tw_ip5['lhcb2']["mux", "e.ds.r5.b2"] - tw_ip5['lhcb2']["mux", "ip5"]
-    v["muyip5b2_r"] = tw_ip5['lhcb2']["muy", "e.ds.r5.b2"] - tw_ip5['lhcb2']["muy", "ip5"]
+    v["muxip5b2"] = (
+        tw_ip5["lhcb2"]["mux", "e.ds.r5.b2"] - tw_ip5["lhcb2"]["mux", "s.ds.l5.b2"]
+    )
+    v["muyip5b2"] = (
+        tw_ip5["lhcb2"]["muy", "e.ds.r5.b2"] - tw_ip5["lhcb2"]["muy", "s.ds.l5.b2"]
+    )
+    v["muxip5b2_l"] = tw_ip5["lhcb2"]["mux", "ip5"]
+    v["muyip5b2_l"] = tw_ip5["lhcb2"]["muy", "ip5"]
+    v["muxip5b2_r"] = (
+        tw_ip5["lhcb2"]["mux", "e.ds.r5.b2"] - tw_ip5["lhcb2"]["mux", "ip5"]
+    )
+    v["muyip5b2_r"] = (
+        tw_ip5["lhcb2"]["muy", "e.ds.r5.b2"] - tw_ip5["lhcb2"]["muy", "ip5"]
+    )
 
     # OPTICS IPs
-    for bim in ['b1','b2']:
-        for ip in [1,2,3,4,5,6,7,8]:
-            v[f"betxip{ip}{bim}"] = tw[f'lhc{bim}']["betx", f"ip{ip}"]
-            v[f"betyip{ip}{bim}"] = tw[f'lhc{bim}']["bety", f"ip{ip}"]
-            v[f"alfxip{ip}{bim}"] = tw[f'lhc{bim}']["alfx", f"ip{ip}"]
-            v[f"alfyip{ip}{bim}"] = tw[f'lhc{bim}']["alfy", f"ip{ip}"]
-            v[f"dxip{ip}{bim}"]   = tw[f'lhc{bim}']["dx", f"ip{ip}"]
-            v[f"dpxi{ip}{bim}"]   = tw[f'lhc{bim}']["dpx", f"ip{ip}"]
+    for bim in ["b1", "b2"]:
+        for ip in [1, 2, 3, 4, 5, 6, 7, 8]:
+            v[f"betxip{ip}{bim}"] = tw[f"lhc{bim}"]["betx", f"ip{ip}"]
+            v[f"betyip{ip}{bim}"] = tw[f"lhc{bim}"]["bety", f"ip{ip}"]
+            v[f"alfxip{ip}{bim}"] = tw[f"lhc{bim}"]["alfx", f"ip{ip}"]
+            v[f"alfyip{ip}{bim}"] = tw[f"lhc{bim}"]["alfy", f"ip{ip}"]
+            v[f"dxip{ip}{bim}"] = tw[f"lhc{bim}"]["dx", f"ip{ip}"]
+            v[f"dpxi{ip}{bim}"] = tw[f"lhc{bim}"]["dpx", f"ip{ip}"]
 
-        v[f'muxip2{bim}'] = tw[f'lhc{bim}']['mux',f'e.ds.r2.{bim}'] - tw[f'lhc{bim}']['mux','ip1'] - v[f'muxip1{bim}_r'] - tw81_12_xt[f'lhc{bim}']['12'].mux[-1]
-        v[f'muxip6{bim}'] = tw[f'lhc{bim}']['mux',f'e.ds.r6.{bim}'] - tw[f'lhc{bim}']['mux','ip5'] - v[f'muxip5{bim}_r'] - tw45_56_xt[f'lhc{bim}']['56'].mux[-1]
-        v[f'muxip8{bim}'] = tw[f'lhc{bim}']['mux','ip1'] - tw[f'lhc{bim}']['mux',f's.ds.l8.{bim}'] - v[f'muxip1{bim}_l'] - tw81_12_xt[f'lhc{bim}']['81'].mux[-1]
-        v[f'muxip4{bim}'] = tw[f'lhc{bim}']['mux','ip5'] - tw[f'lhc{bim}']['mux',f's.ds.l4.{bim}'] - v[f'muxip5{bim}_l'] - tw45_56_xt[f'lhc{bim}']['45'].mux[-1]
-        v[f'muxip3{bim}'] = tw[f'lhc{bim}']['mux',f'e.ds.r3.{bim}'] - tw[f'lhc{bim}']['mux',f's.ds.l3.{bim}'] 
-        v[f'muxip7{bim}'] = tw[f'lhc{bim}']['mux',f'e.ds.r7.{bim}'] - tw[f'lhc{bim}']['mux',f's.ds.l7.{bim}'] 
+        v[f"muxip2{bim}"] = (
+            tw[f"lhc{bim}"]["mux", f"e.ds.r2.{bim}"]
+            - tw[f"lhc{bim}"]["mux", "ip1"]
+            - v[f"muxip1{bim}_r"]
+            - tw81_12_xt[f"lhc{bim}"]["12"].mux[-1]
+        )
+        v[f"muxip6{bim}"] = (
+            tw[f"lhc{bim}"]["mux", f"e.ds.r6.{bim}"]
+            - tw[f"lhc{bim}"]["mux", "ip5"]
+            - v[f"muxip5{bim}_r"]
+            - tw45_56_xt[f"lhc{bim}"]["56"].mux[-1]
+        )
+        v[f"muxip8{bim}"] = (
+            tw[f"lhc{bim}"]["mux", "ip1"]
+            - tw[f"lhc{bim}"]["mux", f"s.ds.l8.{bim}"]
+            - v[f"muxip1{bim}_l"]
+            - tw81_12_xt[f"lhc{bim}"]["81"].mux[-1]
+        )
+        v[f"muxip4{bim}"] = (
+            tw[f"lhc{bim}"]["mux", "ip5"]
+            - tw[f"lhc{bim}"]["mux", f"s.ds.l4.{bim}"]
+            - v[f"muxip5{bim}_l"]
+            - tw45_56_xt[f"lhc{bim}"]["45"].mux[-1]
+        )
+        v[f"muxip3{bim}"] = (
+            tw[f"lhc{bim}"]["mux", f"e.ds.r3.{bim}"]
+            - tw[f"lhc{bim}"]["mux", f"s.ds.l3.{bim}"]
+        )
+        v[f"muxip7{bim}"] = (
+            tw[f"lhc{bim}"]["mux", f"e.ds.r7.{bim}"]
+            - tw[f"lhc{bim}"]["mux", f"s.ds.l7.{bim}"]
+        )
 
-        v[f'muyip2{bim}'] = tw[f'lhc{bim}']['muy',f'e.ds.r2.{bim}'] - tw[f'lhc{bim}']['muy','ip1'] - v[f'muyip1{bim}_r'] - tw81_12_xt[f'lhc{bim}']['12'].muy[-1]
-        v[f'muyip6{bim}'] = tw[f'lhc{bim}']['muy',f'e.ds.r6.{bim}'] - tw[f'lhc{bim}']['muy','ip5'] - v[f'muyip5{bim}_l'] - tw45_56_xt[f'lhc{bim}']['56'].muy[-1]
-        v[f'muyip8{bim}'] = tw[f'lhc{bim}']['muy','ip1'] - tw[f'lhc{bim}']['muy',f's.ds.l8.{bim}'] - v[f'muyip1{bim}_l'] - tw81_12_xt[f'lhc{bim}']['81'].muy[-1]
-        v[f'muyip4{bim}'] = tw[f'lhc{bim}']['muy','ip5'] - tw[f'lhc{bim}']['muy',f's.ds.l4.{bim}'] - v[f'muyip5{bim}_l'] - tw45_56_xt[f'lhc{bim}']['45'].muy[-1]
-        v[f'muyip3{bim}'] = tw[f'lhc{bim}']['muy',f'e.ds.r3.{bim}'] - tw[f'lhc{bim}']['muy',f's.ds.l3.{bim}'] 
-        v[f'muyip7{bim}'] = tw[f'lhc{bim}']['muy',f'e.ds.r7.{bim}'] - tw[f'lhc{bim}']['muy',f's.ds.l7.{bim}'] 
+        v[f"muyip2{bim}"] = (
+            tw[f"lhc{bim}"]["muy", f"e.ds.r2.{bim}"]
+            - tw[f"lhc{bim}"]["muy", "ip1"]
+            - v[f"muyip1{bim}_r"]
+            - tw81_12_xt[f"lhc{bim}"]["12"].muy[-1]
+        )
+        v[f"muyip6{bim}"] = (
+            tw[f"lhc{bim}"]["muy", f"e.ds.r6.{bim}"]
+            - tw[f"lhc{bim}"]["muy", "ip5"]
+            - v[f"muyip5{bim}_l"]
+            - tw45_56_xt[f"lhc{bim}"]["56"].muy[-1]
+        )
+        v[f"muyip8{bim}"] = (
+            tw[f"lhc{bim}"]["muy", "ip1"]
+            - tw[f"lhc{bim}"]["muy", f"s.ds.l8.{bim}"]
+            - v[f"muyip1{bim}_l"]
+            - tw81_12_xt[f"lhc{bim}"]["81"].muy[-1]
+        )
+        v[f"muyip4{bim}"] = (
+            tw[f"lhc{bim}"]["muy", "ip5"]
+            - tw[f"lhc{bim}"]["muy", f"s.ds.l4.{bim}"]
+            - v[f"muyip5{bim}_l"]
+            - tw45_56_xt[f"lhc{bim}"]["45"].muy[-1]
+        )
+        v[f"muyip3{bim}"] = (
+            tw[f"lhc{bim}"]["muy", f"e.ds.r3.{bim}"]
+            - tw[f"lhc{bim}"]["muy", f"s.ds.l3.{bim}"]
+        )
+        v[f"muyip7{bim}"] = (
+            tw[f"lhc{bim}"]["muy", f"e.ds.r7.{bim}"]
+            - tw[f"lhc{bim}"]["muy", f"s.ds.l7.{bim}"]
+        )
 
-
-        v[f'muxip2{bim}_l'] = tw[f'lhc{bim}']['mux','ip2'] - tw[f'lhc{bim}']['mux','ip1'] - v[f'muxip1{bim}_r'] - tw81_12_xt[f'lhc{bim}']['12'].mux[-1]
-        v[f'muxip6{bim}_l'] = tw[f'lhc{bim}']['mux','ip6'] - tw[f'lhc{bim}']['mux','ip5'] - v[f'muxip5{bim}_r'] - tw45_56_xt[f'lhc{bim}']['56'].mux[-1]
-        v[f'muxip8{bim}_r'] = tw[f'lhc{bim}']['mux','ip1'] - tw[f'lhc{bim}']['mux','ip8'] - v[f'muxip1{bim}_l'] - tw81_12_xt[f'lhc{bim}']['81'].mux[-1]
-        v[f'muxip4{bim}_r'] = tw[f'lhc{bim}']['mux','ip5'] - tw[f'lhc{bim}']['mux','ip4'] - v[f'muxip5{bim}_l'] - tw45_56_xt[f'lhc{bim}']['45'].mux[-1]
-        v[f'muxip3{bim}_r'] = tw[f'lhc{bim}']['mux',f'e.ds.r3.{bim}'] - tw[f'lhc{bim}']['mux','ip3']
-        v[f'muxip7{bim}_r'] = tw[f'lhc{bim}']['mux',f'e.ds.r7.{bim}'] - tw[f'lhc{bim}']['mux','ip7']
-        v[f'muyip2{bim}_l'] = tw[f'lhc{bim}']['muy','ip2'] - tw[f'lhc{bim}']['muy','ip1'] - v[f'muyip1{bim}_r'] - tw81_12_xt[f'lhc{bim}']['12'].muy[-1]
-        v[f'muyip6{bim}_l'] = tw[f'lhc{bim}']['muy','ip6'] - tw[f'lhc{bim}']['muy','ip5'] - v[f'muyip5{bim}_r'] - tw45_56_xt[f'lhc{bim}']['56'].muy[-1]
-        v[f'muyip8{bim}_r'] = tw[f'lhc{bim}']['muy','ip1'] - tw[f'lhc{bim}']['muy','ip8'] - v[f'muyip1{bim}_l'] - tw81_12_xt[f'lhc{bim}']['81'].muy[-1]
-        v[f'muyip4{bim}_r'] = tw[f'lhc{bim}']['muy','ip5'] - tw[f'lhc{bim}']['muy','ip4'] - v[f'muyip5{bim}_l'] - tw45_56_xt[f'lhc{bim}']['45'].muy[-1]
-        v[f'muyip3{bim}_r'] = tw[f'lhc{bim}']['muy',f'e.ds.r3.{bim}'] - tw[f'lhc{bim}']['muy','ip3']
-        v[f'muyip7{bim}_r'] = tw[f'lhc{bim}']['muy',f'e.ds.r7.{bim}'] - tw[f'lhc{bim}']['muy','ip7']
-        v[f'muxip2{bim}_r'] = v[f'muxip2{bim}'] - v[f'muxip2{bim}_l']
-        v[f'muxip6{bim}_r'] = v[f'muxip6{bim}'] - v[f'muxip6{bim}_l']
-        v[f'muxip8{bim}_l'] = v[f'muxip8{bim}'] - v[f'muxip8{bim}_r']
-        v[f'muxip4{bim}_l'] = v[f'muxip4{bim}'] - v[f'muxip4{bim}_r']
-        v[f'muxip3{bim}_l'] = v[f'muxip3{bim}'] - v[f'muxip3{bim}_r']
-        v[f'muxip7{bim}_l'] = v[f'muxip7{bim}'] - v[f'muxip7{bim}_r']
-        v[f'muyip2{bim}_r'] = v[f'muyip2{bim}'] - v[f'muyip2{bim}_l']
-        v[f'muyip6{bim}_r'] = v[f'muyip6{bim}'] - v[f'muyip6{bim}_l']
-        v[f'muyip8{bim}_l'] = v[f'muyip8{bim}'] - v[f'muyip8{bim}_r']
-        v[f'muyip4{bim}_l'] = v[f'muyip4{bim}'] - v[f'muyip4{bim}_r']
-        v[f'muyip3{bim}_l'] = v[f'muyip3{bim}'] - v[f'muyip3{bim}_r']
-        v[f'muyip7{bim}_l'] = v[f'muyip7{bim}'] - v[f'muyip7{bim}_r']
+        v[f"muxip2{bim}_l"] = (
+            tw[f"lhc{bim}"]["mux", "ip2"]
+            - tw[f"lhc{bim}"]["mux", "ip1"]
+            - v[f"muxip1{bim}_r"]
+            - tw81_12_xt[f"lhc{bim}"]["12"].mux[-1]
+        )
+        v[f"muxip6{bim}_l"] = (
+            tw[f"lhc{bim}"]["mux", "ip6"]
+            - tw[f"lhc{bim}"]["mux", "ip5"]
+            - v[f"muxip5{bim}_r"]
+            - tw45_56_xt[f"lhc{bim}"]["56"].mux[-1]
+        )
+        v[f"muxip8{bim}_r"] = (
+            tw[f"lhc{bim}"]["mux", "ip1"]
+            - tw[f"lhc{bim}"]["mux", "ip8"]
+            - v[f"muxip1{bim}_l"]
+            - tw81_12_xt[f"lhc{bim}"]["81"].mux[-1]
+        )
+        v[f"muxip4{bim}_r"] = (
+            tw[f"lhc{bim}"]["mux", "ip5"]
+            - tw[f"lhc{bim}"]["mux", "ip4"]
+            - v[f"muxip5{bim}_l"]
+            - tw45_56_xt[f"lhc{bim}"]["45"].mux[-1]
+        )
+        v[f"muxip3{bim}_r"] = (
+            tw[f"lhc{bim}"]["mux", f"e.ds.r3.{bim}"] - tw[f"lhc{bim}"]["mux", "ip3"]
+        )
+        v[f"muxip7{bim}_r"] = (
+            tw[f"lhc{bim}"]["mux", f"e.ds.r7.{bim}"] - tw[f"lhc{bim}"]["mux", "ip7"]
+        )
+        v[f"muyip2{bim}_l"] = (
+            tw[f"lhc{bim}"]["muy", "ip2"]
+            - tw[f"lhc{bim}"]["muy", "ip1"]
+            - v[f"muyip1{bim}_r"]
+            - tw81_12_xt[f"lhc{bim}"]["12"].muy[-1]
+        )
+        v[f"muyip6{bim}_l"] = (
+            tw[f"lhc{bim}"]["muy", "ip6"]
+            - tw[f"lhc{bim}"]["muy", "ip5"]
+            - v[f"muyip5{bim}_r"]
+            - tw45_56_xt[f"lhc{bim}"]["56"].muy[-1]
+        )
+        v[f"muyip8{bim}_r"] = (
+            tw[f"lhc{bim}"]["muy", "ip1"]
+            - tw[f"lhc{bim}"]["muy", "ip8"]
+            - v[f"muyip1{bim}_l"]
+            - tw81_12_xt[f"lhc{bim}"]["81"].muy[-1]
+        )
+        v[f"muyip4{bim}_r"] = (
+            tw[f"lhc{bim}"]["muy", "ip5"]
+            - tw[f"lhc{bim}"]["muy", "ip4"]
+            - v[f"muyip5{bim}_l"]
+            - tw45_56_xt[f"lhc{bim}"]["45"].muy[-1]
+        )
+        v[f"muyip3{bim}_r"] = (
+            tw[f"lhc{bim}"]["muy", f"e.ds.r3.{bim}"] - tw[f"lhc{bim}"]["muy", "ip3"]
+        )
+        v[f"muyip7{bim}_r"] = (
+            tw[f"lhc{bim}"]["muy", f"e.ds.r7.{bim}"] - tw[f"lhc{bim}"]["muy", "ip7"]
+        )
+        v[f"muxip2{bim}_r"] = v[f"muxip2{bim}"] - v[f"muxip2{bim}_l"]
+        v[f"muxip6{bim}_r"] = v[f"muxip6{bim}"] - v[f"muxip6{bim}_l"]
+        v[f"muxip8{bim}_l"] = v[f"muxip8{bim}"] - v[f"muxip8{bim}_r"]
+        v[f"muxip4{bim}_l"] = v[f"muxip4{bim}"] - v[f"muxip4{bim}_r"]
+        v[f"muxip3{bim}_l"] = v[f"muxip3{bim}"] - v[f"muxip3{bim}_r"]
+        v[f"muxip7{bim}_l"] = v[f"muxip7{bim}"] - v[f"muxip7{bim}_r"]
+        v[f"muyip2{bim}_r"] = v[f"muyip2{bim}"] - v[f"muyip2{bim}_l"]
+        v[f"muyip6{bim}_r"] = v[f"muyip6{bim}"] - v[f"muyip6{bim}_l"]
+        v[f"muyip8{bim}_l"] = v[f"muyip8{bim}"] - v[f"muyip8{bim}_r"]
+        v[f"muyip4{bim}_l"] = v[f"muyip4{bim}"] - v[f"muyip4{bim}_r"]
+        v[f"muyip3{bim}_l"] = v[f"muyip3{bim}"] - v[f"muyip3{bim}_r"]
+        v[f"muyip7{bim}_l"] = v[f"muyip7{bim}"] - v[f"muyip7{bim}_r"]
 
 
 def rematch_ir6(
@@ -232,6 +373,7 @@ def set_new_ir7_strengths(collider):
     collider.vars["kq4.lr7"] = 0.0011653779946877393
     collider.vars["kq5.lr7"] = -0.001202569087048791
 
+
 # Addapted from https://gitlab.cern.ch/acc-models/acc-models-lhc/-/blob/hl19/strengths/ir7/re12c6b.str
 new_ir7_optics = {
     "b1": {
@@ -267,7 +409,6 @@ def rematch_new_ir7(
     solve=True,
     restore=True,
     assert_within_tol=True,
-    staged_match=False,
     default_tol=None,
 ):
 
@@ -295,7 +436,7 @@ def rematch_new_ir7(
                 dpx=new_ir7_optics[bn]["dpx"],
                 # mux=new_ir7_optics[bn]['mux'],
                 # muy=new_ir7_optics[bn]['muy'],
-                tag="stage1",
+                tag="ip7",
             ),
             xt.TargetSet(
                 at=xt.END,
@@ -310,14 +451,14 @@ def rematch_new_ir7(
                 new_ir7_optics[bn]["mux"],
                 end="ip7",
                 start=f"s.ds.l7.{bn}",
-                tag="stage1",
+                tag="ip7_mux",
             ),
             xt.TargetRelPhaseAdvance(
                 "muy",
                 new_ir7_optics[bn]["muy"],
                 end="ip7",
                 start=f"s.ds.l7.{bn}",
-                tag="stage1",
+                tag="ip7_muy",
             ),
         ],
         vary=[
@@ -339,18 +480,22 @@ def rematch_new_ir7(
                     f"kqtl11.r7{bn}",
                     f"kqt12.r7{bn}",
                     f"kqt13.r7{bn}",
-                ]
-            )
+                ],
+                tag="single_quads",
+            ),
+            xt.Vary("kq4.lr7", tag="q4"),
+            xt.Vary("kq5.lr7", tag="q5"),
+            xt.Vary("kqt4.l7", tag="qt4l"),
+            xt.Vary("kqt4.r7", tag="qt4r"),
         ],
     )
 
+    opt.disable_vary(tag="q4")
+    opt.disable_vary(tag="q5")
+    opt.disable_vary(tag="qt4l")
+    opt.disable_vary(tag="qt4r")
+
     if solve:
-        if staged_match:
-            opt.disable_targets(tag="stage1")
-            opt.solve()
-            opt.enable_targets(tag="stage1")
-            opt.solve()
-        else:
-            opt.solve()
+        opt.solve()
 
     return opt

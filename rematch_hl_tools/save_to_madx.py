@@ -6,6 +6,7 @@ def clean_expr2(expr):
     return (
         expr.replace("vars['", "")
         .replace("f.", "")
+        .replace("f['","")
         .replace("']", "")
         .replace("None", "0")
     )

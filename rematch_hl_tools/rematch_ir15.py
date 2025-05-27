@@ -29,6 +29,7 @@ def get_presqueezed_tw(env, ip):
 
     return tw_ip
 
+
 def connect_lr_qx(collider, nqx=0, ir=5):
     """Connect specified right kqx in IP5 of IP1 with the left kqx"""
     assert ir == 1 or ir == 5
@@ -445,6 +446,23 @@ def rematch_ir15(
     if solve:
         opt.solve()
 
+    redefine_ip1(collider)
+
+    # remove the imqXlr knobs if any
+    quads_imqlr = "kq4.l5b2 kq4.r5b2 kq5.l5b2 kq5.r5b2 kq6.l5b2 kq6.r5b2"
+    for quad in quads_imqlr.split():
+        collider.vars[quad] = collider.varval[quad]
+
+    for quad in quads_ir5_b1.split():
+        collider.vars[quad.replace("5b", "1b")] = collider.varval[quad]
+
+    for quad in quads_ir5_b2.split():
+        collider.vars[quad.replace("5b", "1b")] = collider.varval[quad]
+
+    return opt
+
+
+def redefine_ip1(collider):
     collider.vars["kqx1.r5"] = -collider.varval["kqx1.l5"]
     collider.vars["kqx2.l5"] = collider.varval["kqx2a.l5"]
     collider.vars["kqx2a.l5"] = collider.varval["kqx2.l5"]
@@ -461,16 +479,3 @@ def rematch_ir15(
     collider.vars["kqx2a.r1"] = collider.varval["kqx2a.r5"]
     collider.vars["kqx2b.r1"] = collider.varval["kqx2b.r5"]
     collider.vars["kqx3.r1"] = collider.varval["kqx3.r5"]
-
-    # remove the imqXlr knobs if any
-    quads_imqlr = "kq4.l5b2 kq4.r5b2 kq5.l5b2 kq5.r5b2 kq6.l5b2 kq6.r5b2"
-    for quad in quads_imqlr.split():
-        collider.vars[quad] = collider.varval[quad]
-
-    for quad in quads_ir5_b1.split():
-        collider.vars[quad.replace("5b", "1b")] = collider.varval[quad]
-
-    for quad in quads_ir5_b2.split():
-        collider.vars[quad.replace("5b", "1b")] = collider.varval[quad]
-
-    return opt

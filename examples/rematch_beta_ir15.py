@@ -4,16 +4,19 @@ import rematch_hl_tools
 from rematch_hl_tools import qtlim1
 from xtrack._temp.lhc_match import get_arc_periodic_solution
 from matplotlib import pyplot as plt
-
+import numpy as np
 # %%
 # env1 = xt.Environment.from_json("build_hl/hl_coll.json")
 # env = xt.Environment.from_json("build_hl/hl_coll.json")
 # env = xt.Environment.from_json("rematch_round_1300_v2.json")
 
 
-env1 = xt.Environment.from_json("rematch_round_1000.json")
-env = xt.Environment.from_json("rematch_round_1000.json")
+env1 = xt.Environment.from_json("build_hl/hl_round_1000.json")
+env = xt.Environment.from_json("build_hl/hl_round_1000.json")
+# env = xt.Environment.from_json("build_hl/hl_round_150.json")
 
+# %%
+twb1 = env.lhcb1.twiss()
 # %%
 rematch_hl_tools.set_limits_steps_quads_ip15(env)
 env.vars.vary_default.update(
@@ -61,12 +64,25 @@ axs[0].grid()
 axs[1].grid()
 
 plt.show()
-
+# %%
+print(twb1.rows["ip.*"].cols["betx bety"])
 # %%
 optimizers = {}
 # %%
-betxy = 1.0
-
+extra_tars = [
+    # xt.Target(
+    #     lambda tt: np.sqrt(
+    #         tt.rows["acfca.4bl5.b1"].betx[0] * tt.rows["acfca.4bl5.b1"].bety[0]
+    #     ),
+    #     line="lhcb1",
+    #     value=850,
+    #     tol=1e-5,
+    # ),
+    xt.Target(line="lhcb1", betx=1100, tol=1e-3, at="acfca.4bl5.b1"),
+]
+# %%
+betxy = 1
+# %%
 optimizers["ir15"] = rematch_hl_tools.rematch_ir15(
     env,
     betxy,
@@ -77,8 +93,8 @@ optimizers["ir15"] = rematch_hl_tools.rematch_ir15(
     ir5q5sym=0,
     ir5q6sym=0,
     solve=True,
-    beta_peak_ratio=0.98,
     match_on_triplet=5,
+    beta_peak_ratio=0.9,
 )
 # %%
 optimizers["ir15_2"] = rematch_hl_tools.rematch_ir15(
@@ -121,7 +137,13 @@ axs.legend()
 axs.grid()
 
 plt.show()
+# %%
 
+twnb1 = env.lhcb1.twiss()
+twnb2 = env.lhcb2.twiss()
+# %%
+print(twnb1.rows["ip.*"].cols["betx bety"])
+print(twnb2.rows["ip.*"].cols["betx bety"])
 # %%
 rmat1 = tw_ip5.get_R_matrix_table()
 rmat2 = tw_ip5_n.get_R_matrix_table()
@@ -143,11 +165,6 @@ axs.grid()
 plt.show()
 
 # %%
-# env.to_json('rematch_round.json')
-
-# env.to_json('rematch_round_1300.json')
-# env.to_json('rematch_round_1300_v2.json')
-# env.to_json("rematch_round_1300_v3.json")
-env.to_json("rematch_round_1000.json")
+# env.to_json("optics/opt_round_900_ir15.json")
 
 # %%
