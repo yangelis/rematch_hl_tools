@@ -164,8 +164,9 @@ def rematch_crabs(
 
     collider.vars["z_crab"] = 0
 
-    return (
-        opts,
-        crabh_angle_max,
-        crabv_angle_max,
-    )
+    crab_angles = {
+        "crabh_angle_max": crabh_angle_max,
+        "crabv_angle_max": crabv_angle_max,
+    }
+
+    return (opts, crab_angles)

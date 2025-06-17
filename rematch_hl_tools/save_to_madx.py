@@ -285,7 +285,7 @@ def _save_dipoles(collider):
 
 def _save_experimental_magnets(collider):
     lines = []
-    lines.append("\n!***Experiment magnets***")
+    lines.append("!***Experiment magnets***")
 
     knobs = "on_sol_atlas on_sol_alice on_sol_cms on_alice on_lhcb"
     for k in knobs.split():
@@ -516,13 +516,14 @@ def _save_optics_orb8(collider):
             lines.append(f"{n:20} := {expr} ;")
         except:
             continue
-    names_rest = (
-        "acbcv5.l8b2 acbch5.l8b1 acbyv5.r8b1 acbyh5.r8b2 "
-        "acbch6.l8b2 acbcv6.l8b1 acbch6.r8b1 acbcv6.r8b2"
-    )
-    for n in names_rest.split():
-        expr = clean_expr(collider.vars[n]._expr)
-        lines.append(f"{n:20} := {expr} ;")
+    # TODO: verify this is duplicate
+    # names_rest = (
+    #     "acbcv5.l8b2 acbch5.l8b1 acbyv5.r8b1 acbyh5.r8b2 "
+    #     "acbch6.l8b2 acbcv6.l8b1 acbch6.r8b1 acbcv6.r8b2"
+    # )
+    # for n in names_rest.split():
+    #     expr = clean_expr(collider.vars[n]._expr)
+    #     lines.append(f"{n:20} := {expr} ;")
 
     return lines
 
@@ -630,7 +631,7 @@ def _save_optics_summ(collider, ip):
         f"muxIP{ip}b2_L = {collider.varval[f'muxip{ip}b2_l']:11.6f}; "
         f"muyIP{ip}b2_L = {collider.varval[f'muyip{ip}b2_l']:11.6f}; "
         f"muxIP{ip}b2_R = {collider.varval[f'muxip{ip}b2_r']:11.6f}; "
-        f"muyIP{ip}b2_R = {collider.varval[f'muyip{ip}b2_r']:11.6f}; "
+        f"muyIP{ip}b2_R = {collider.varval[f'muyip{ip}b2_r']:11.6f}; \n"
     )
 
     return lines
@@ -651,6 +652,7 @@ def _save_optics_summ_cross(collider, ip):
 def _save_optics_ir15(collider, ip):
     lines = []
     lines.append(f"\n!*** IR{ip} Optics***")
+    lines += _save_new_triplet_knobs(ip)
     lines += _save_optics_triplethl(collider, ip)
     lines += _save_optics_ms(collider, ip)
     lines += _save_optics_ds(collider, ip)
@@ -707,6 +709,17 @@ def _save_optics_ir37(collider, ip):
     lines += _save_optics_summ(collider, ip)
     return lines
 
+
+
+def _save_new_triplet_knobs(ip):
+    lines = []
+    lines.append(f"kqx.l{ip}              :=   kqx2a.l{ip}               ;")
+    lines.append(f"ktqx1.l{ip}            :=   kqx1.l{ip} - kqx2a.l{ip}  ;")
+    lines.append(f"ktqx3.l{ip}            :=   kqx3.l{ip} - kqx2a.l{ip}  ;")
+    lines.append(f"kqx.r{ip}              :=   kqx2a.r{ip}               ;")
+    lines.append(f"ktqx1.r{ip}            :=   kqx1.r{ip} - kqx2a.r{ip}  ;")
+    lines.append(f"ktqx3.r{ip}            :=   kqx3.r{ip} - kqx2a.r{ip}  ;")
+    return lines
 
 import sys
 
