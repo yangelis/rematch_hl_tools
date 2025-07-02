@@ -186,6 +186,31 @@ def update_stored_vals_ips(collider):
             - tw[f"lhc{bim}"]["muy", f"s.ds.l7.{bim}"]
         )
 
+        # TODO:fix this
+        for ph in ["muxip1b1_l", "muxip1b1_r", "muxip5b1_l", "muxip5b1_r",
+            "muxip2b1", "muxip4b1", "muxip6b1", "muxip8b1",
+            "mux12b1", "mux45b1", "mux56b1", "mux81b1"]:
+            if collider.varval[ph] < 0:
+                collider.varval[ph] += tw['lhcb1'].qx      
+
+        for ph in ["muyip1b1_l", "muyip1b1_r", "muyip5b1_l", "muyip5b1_r",
+                "muyip2b1","muyip4b1","muyip6b1","muyip8b1",
+                "muy12b1","muy45b1","muy56b1","muy81b1"]:
+            if collider.varval[ph] < 0:
+                collider.varval[ph] += tw['lhcb1'].qy
+
+        for ph in ["muxip1b2_l", "muxip1b2_r", "muxip5b2_l", "muxip5b2_r",
+                "muxip2b2", "muxip4b2", "muxip6b2", "muxip8b2",
+                "mux12b2", "mux45b2", "mux56b2", "mux81b2"]:
+            if collider.varval[ph] < 0:
+                collider.varval[ph] += tw['lhcb2'].qx      
+
+        for ph in ["muyip1b2_l", "muyip1b2_r", "muyip5b2_l", "muyip5b2_r",
+                "muyip2b2","muyip4b2","muyip6b2","muyip8b2",
+                "muy12b2","muy45b2","muy56b2","muy81b2"]:
+            if collider.varval[ph] < 0:
+                collider.varval[ph] += tw['lhcb2'].qy   
+                
         v[f"muxip2{bim}_l"] = (
             tw[f"lhc{bim}"]["mux", "ip2"]
             - tw[f"lhc{bim}"]["mux", "ip1"]
@@ -258,7 +283,6 @@ def update_stored_vals_ips(collider):
         v[f"muyip4{bim}_l"] = v[f"muyip4{bim}"] - v[f"muyip4{bim}_r"]
         v[f"muyip3{bim}_l"] = v[f"muyip3{bim}"] - v[f"muyip3{bim}_r"]
         v[f"muyip7{bim}_l"] = v[f"muyip7{bim}"] - v[f"muyip7{bim}_r"]
-
 
 
 def ats_phase_aux(collider, tw, tw_sq_a81_ip1_a12_b1, tw_sq_a45_ip5_a56_b1, tw_sq_a81_ip1_a12_b2, tw_sq_a45_ip5_a56_b2):
@@ -857,6 +881,137 @@ def rematch_new_ir7(
     opt.disable_vary(tag="q5")
     opt.disable_vary(tag="qt4l")
     opt.disable_vary(tag="qt4r")
+
+    if solve:
+        opt.solve()
+
+    return opt
+
+
+def rematch_new_ir7_both(
+    collider,
+    boundary_conditions_left,
+    boundary_conditions_right,
+    mux_ir7_b1,
+    muy_ir7_b1,
+    mux_ir7_b2,
+    muy_ir7_b2,
+    solve=True,
+    restore=True,
+    assert_within_tol=True,
+    default_tol=None,
+):
+
+    opt = collider.match(
+        solve=False,
+        restore_if_fail=restore,
+        assert_within_tol=assert_within_tol,
+        default_tol=default_tol,
+        solver_options={"n_bisections": 3, "min_step": 1e-7},
+        start=["s.ds.l7.b1", "s.ds.l7.b2"],
+        end=["e.ds.r7.b1", "e.ds.r7.b2"],
+        init=[
+            boundary_conditions_left["lhcb1"]["67"],
+            boundary_conditions_left["lhcb2"]["67"],
+        ],
+        init_at=[xt.START, xt.START],
+        targets=[
+            xt.TargetSet(
+                line="lhcb1",
+                at="ip7",
+                alfx=new_ir7_optics["b1"]["alfx"],
+                alfy=new_ir7_optics["b1"]["alfy"],
+                betx=new_ir7_optics["b1"]["betx"],
+                bety=new_ir7_optics["b1"]["bety"],
+                dx=new_ir7_optics["b1"]["dx"],
+                dpx=new_ir7_optics["b1"]["dpx"],
+                tag="ip7_b1",
+            ),
+            xt.TargetSet(
+                line="lhcb2",
+                at="ip7",
+                alfx=new_ir7_optics["b2"]["alfx"],
+                alfy=new_ir7_optics["b2"]["alfy"],
+                betx=new_ir7_optics["b2"]["betx"],
+                bety=new_ir7_optics["b2"]["bety"],
+                dx=new_ir7_optics["b2"]["dx"],
+                dpx=new_ir7_optics["b2"]["dpx"],
+                tag="ip7_b2",
+            ),
+            xt.TargetSet(
+                line="lhcb1",
+                at=xt.END,
+                tars=("betx", "bety", "alfx", "alfy", "dx", "dpx"),
+                value=boundary_conditions_right["lhcb1"]["78"],
+            ),
+            xt.TargetSet(
+                line="lhcb2",
+                at=xt.END,
+                tars=("betx", "bety", "alfx", "alfy", "dx", "dpx"),
+                value=boundary_conditions_right["lhcb2"]["78"],
+            ),
+            xt.TargetSet(
+                line="lhcb1",
+                at="e.ds.r7.b1",
+                mux=mux_ir7_b1+boundary_conditions_left["lhcb1"]["67"]['mux', 's.ds.l7.b1'],
+                muy=muy_ir7_b1+boundary_conditions_left["lhcb1"]["67"]['muy', 's.ds.l7.b1'],
+            ),
+            xt.TargetSet(
+                line="lhcb2",
+                at="e.ds.r7.b2",
+                mux=mux_ir7_b2+boundary_conditions_left["lhcb2"]["67"]['mux', 's.ds.l7.b2'],
+                muy=muy_ir7_b2+boundary_conditions_left["lhcb2"]["67"]['muy', 's.ds.l7.b2'],
+            ),
+        ],
+        vary=[
+            xt.VaryList(
+                [
+                    "kqt13.l7b1",
+                    "kqt12.l7b1",
+                    "kqtl11.l7b1",
+                    "kqtl10.l7b1",
+                    "kqtl9.l7b1",
+                    "kqtl8.l7b1",
+                    "kqtl7.l7b1",
+                    "kq6.l7b1",
+                    "kq6.r7b1",
+                    "kqtl7.r7b1",
+                    "kqtl8.r7b1",
+                    "kqtl9.r7b1",
+                    "kqtl10.r7b1",
+                    "kqtl11.r7b1",
+                    "kqt12.r7b1",
+                    "kqt13.r7b1",
+                ],
+                tag="quads_b1",
+            ),
+            xt.VaryList(
+                [
+                    "kqt13.l7b2",
+                    "kqt12.l7b2",
+                    "kqtl11.l7b2",
+                    "kqtl10.l7b2",
+                    "kqtl9.l7b2",
+                    "kqtl8.l7b2",
+                    "kqtl7.l7b2",
+                    "kq6.l7b2",
+                    "kq6.r7b2",
+                    "kqtl7.r7b2",
+                    "kqtl8.r7b2",
+                    "kqtl9.r7b2",
+                    "kqtl10.r7b2",
+                    "kqtl11.r7b2",
+                    "kqt12.r7b2",
+                    "kqt13.r7b2",
+                ],
+                tag="quads_b2",
+            ),
+            xt.Vary("kq4.lr7", tag="common"),
+            xt.Vary("kq5.lr7", tag="common"),
+            xt.Vary("kqt4.l7", tag="common"),
+            xt.Vary("kqt4.r7", tag="common"),
+        ],
+    )
 
     if solve:
         opt.solve()

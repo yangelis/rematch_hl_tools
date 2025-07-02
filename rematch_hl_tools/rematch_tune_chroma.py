@@ -118,7 +118,7 @@ def rematch_chroma(collider, targets=None, default_targets=False, solve=False):
             targets=[
                 xt.TargetSet(dqx=targets[bim]["dqx"], dqy=targets[bim]["dqy"], tol=1e-4)
             ],
-            vary=xt.VaryList([f"ksf.{bim}", f"ksd.{bim}"], step=1e-8),
+            vary=xt.VaryList([f"ksf.{bim}", f"ksd.{bim}"], step=1e-7),
         )
 
         if solve:

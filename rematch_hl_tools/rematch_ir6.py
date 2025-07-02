@@ -239,6 +239,59 @@ class Action_ir6(xt.Action):
             "tcdqgap": tcdqgap,
         }
 
+class Action_dump(xt.Action):
+    def __init__(self, collider, bim):
+        self.collider = collider
+        self.bim = bim
+
+    def run(self, allow_failure=False):
+        try:
+            tw = self.collider[f"lhc{self.bim}"].twiss()
+            beta0 = tw.get_twiss_init(f"s.ds.l6.{self.bim}")
+            beta0.mux = 0
+            beta0.muy = 0
+            tw_ir6 = self.collider[f"lhc{self.bim}"].twiss(
+                start=f"s.ds.l6.{self.bim}", end=f"e.ds.r6.{self.bim}", init=beta0
+            )
+        except ValueError:
+            # Twiss failed
+            return {"bxdump": 1e100, "bydump": 1e100, "bdump": 1e100}
+
+        al_dump = 761
+
+        betxip6 = tw_ir6["betx", "ip6"]
+        alfxip6 = tw_ir6["alfx", "ip6"]
+        betyip6 = tw_ir6["bety", "ip6"]
+        alfyip6 = tw_ir6["alfy", "ip6"]
+
+        if self.bim == "b1":
+            bxdump = (
+                betxip6
+                - 2 * al_dump * alfxip6
+                + al_dump**2 * (1 + alfxip6**2) / betxip6
+            )
+            bydump = (
+                betyip6
+                - 2 * al_dump * alfyip6
+                + al_dump**2 * (1 + alfyip6**2) / betyip6
+            )
+            bdump = np.sqrt(bxdump * bydump)      
+        else:
+            bxdump = (
+                betxip6
+                + 2 * al_dump * alfxip6
+                + al_dump**2 * (1 + alfxip6**2) / betxip6
+            )
+            bydump = (
+                betyip6
+                + 2 * al_dump * alfyip6
+                + al_dump**2 * (1 + alfyip6**2) / betyip6
+            )
+            bdump = np.sqrt(bxdump * bydump)
+
+        return {"bxdump": bxdump, "bydump": bydump, "bdump": bdump}
+
+
 
 def rematch_ir6m(
     collider,
@@ -260,6 +313,12 @@ def rematch_ir6m(
     restore=True,
     assert_within_tol=True,
     default_tol=None,
+    betxtcdq=None,
+    betytcdq=None,
+    betytcds=None,
+    bxdump=None,
+    bydump=None,
+    betir=None,
 ):
 
     assert line_name in ["lhcb1", "lhcb2"]
@@ -273,7 +332,63 @@ def rematch_ir6m(
         dx_ip6 = fixed_ip_params[bn]["dx"]
         dpx_ip6 = fixed_ip_params[bn]["dpx"]
 
-    action_ir6 = Action_ir6(collider, bn)
+    # action_ir6 = Action_ir6(collider, bn)
+    action_dump = Action_dump(collider, bn)
+
+    q4 = "mqy.4r6.b1" if bn == 'b1' else "mqy.4l6.b2"
+    q5 = "mqy.5l6.b1" if bn == 'b1' else "mqy.5r6.b2"
+    tcdqa = "tcdqa.a4r6.b1" if bn == 'b1' else "tcdqa.a4l6.b2"
+    tcds = "tcdsa.4l6.b1" if bn == 'b1' else "tcdsa.4r6.b2"
+
+    ref_tcdqa_betxy = {'b1': {'betx': 470.0, 'bety': 145.0}, 'b2': {'betx': 470.0, 'bety': 145.0}} # 145 or 170?
+
+    extra_targets = []
+    if betxtcdq is None:
+        betxtcdq = ref_tcdqa_betxy[bn]['betx']
+
+    if betytcdq is None:
+        betytcdq = ref_tcdqa_betxy[bn]['bety']
+             
+    if betytcds is None:
+        betytcds = 200.0
+
+    targets_dump = []
+    if bxdump is None and bydump is None:
+        extra_targets.append(action_dump.target("bxdump", xt.GreaterThan(4000)))
+        extra_targets.append(action_dump.target("bydump", xt.GreaterThan(3200)))
+        extra_targets.append(action_dump.target("bdump", xt.GreaterThan(4500)))
+    else:
+        extra_targets.append(action_dump.target("bxdump", bxdump))
+        extra_targets.append(action_dump.target("bydump", bydump))
+
+
+     # extra_targets.append(xt.Target(at=tcds, tar='bety', value=xt.GreaterThan(170))) 
+
+
+    targets_betir = []
+    if betir is not None:
+        if bn == 'b1':
+            targets_betir = [
+                xt.Target(at="mqy.4l6.b1", tar='bety', value=xt.LessThan(betir)),
+                xt.Target(at="mqy.5l6.b1", tar='betx', value=xt.LessThan(betir)),
+                xt.Target(at="mqy.4r6.b1", tar='betx', value=xt.LessThan(betir)),
+                xt.Target(at="mqy.5r6.b1", tar='bety', value=xt.LessThan(betir)),
+                xt.Target(at="mqml.10l6.b1", tar='bety', value=xt.LessThan(betir)),
+                xt.Target(at="mqm.9l6.b1", tar='betx', value=xt.LessThan(betir)),
+            
+        ]
+        elif bn == 'b2':
+            targets_betir = [
+                xt.Target(at="mqy.4l6.b2", tar='betx', value=xt.LessThan(betir)),
+                xt.Target(at="mqy.4r6.b2", tar='bety', value=xt.LessThan(betir)),
+                xt.Target(at="mqy.5r6.b2", tar='betx', value=xt.LessThan(betir)),
+                xt.Target(at='mqml.8l6.b2', tar='betx', value=xt.LessThan(betir)),
+                xt.Target(at='mqml.8r6.b2', tar='bety', value=xt.LessThan(betir)),
+                xt.Target(at='mqm.9l6.b2', tar='bety', value=xt.LessThan(betir)),
+                xt.Target(at='mqm.9r6.b2', tar='betx', value=xt.LessThan(betir)),
+                xt.Target(at='mqml.10l6.b2', tar='betx', value=xt.LessThan(betir)),
+                xt.Target(at='mqml.10r6.b2', tar='bety', value=xt.LessThan(betir)),
+        ]
 
     opt = collider[f"lhc{bn}"].match(
         solve=False,
@@ -303,31 +418,15 @@ def rematch_ir6m(
             ),
             xt.TargetRelPhaseAdvance("mux", mux_ir6),
             xt.TargetRelPhaseAdvance("muy", muy_ir6),
-            xt.Target(
-                at="tcdsa.4l6.b1" if bn == "b1" else "tcdsa.4r6.b2",
-                tar="bety",
-                value=xt.GreaterThan(170),
-            ),
-            action_ir6.target(
-                "dxq5", xt.LessThan(0.7) if bn == "b1" else xt.LessThan(1.0)
-            ),
-            action_ir6.target(
-                "dxq4", xt.LessThan(0.7) if bn == "b1" else xt.LessThan(0.5)
-            ),
-            action_ir6.target("dxtcdq", xt.LessThan(0.5)),
-            #   !dispersion in straight section <0.5
-            #   constraint,expr= refdxq5l6b1<0.7; !was 0.5
-            #   constraint,expr= refdxq4r6b1<0.7; !was 0.5
-            #   constraint,expr= abs(refdxtcdqb1)<0.5;
-            #   !constraint,sequence=lhcb1,range=mqy.5r6.b1,bety<905;
-            #   !constraint,sequence=lhcb1,range=mqy.4l6.b1,bety<1500;
-            #             !dispersion in straight section <0.5
-            # constraint,expr=refdxq5r6b2<1.0; !was 0.5
-            # constraint,expr=refdxq4l6b2<0.5; !was 0.5
-            # constraint,expr=refdxtcdqb2<0.5;  !was 0.5
-            # constraint,sequence=lhcb2,range=MQY.5L6.B2,bety<1500;
-            # constraint,sequence=lhcb2,range=MQY.4R6.B2,bety<1100;
-        ],
+            xt.Target(tag="dxq4", tar=lambda tw: np.abs(tw['dx', q4]), value=xt.LessThan(1.2) if bn == "b1" else xt.LessThan(0.7)),
+            xt.Target(tag="dxq5", tar=lambda tw: np.abs(tw['dx', q5]), value=xt.LessThan(1.2) if bn == "b1" else xt.LessThan(0.7)),
+            xt.Target(tag="dxtcdq", tar=lambda tw: np.abs(tw['dx', tcdqa]), value=xt.LessThan(0.5)),
+            xt.Target(tag="tcdqa_betx", at=tcdqa, tar='betx', value=xt.GreaterThan(betxtcdq)),
+            xt.Target(tag="tcdqa_bety", at=tcdqa, tar='bety', value=xt.GreaterThan(betytcdq)),
+            xt.Target(tag="tcds_bety", at=tcds, tar='bety', value=xt.GreaterThan(betytcds)),
+            # xt.Target(tag="tcds_bety", at=tcds, tar="bety", value=xt.GreaterThan(170)), # NOTE: WHY this is there in madx files
+          
+        ] + targets_betir,
         vary=(
             [
                 xt.VaryList(
