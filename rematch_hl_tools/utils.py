@@ -133,15 +133,41 @@ def check_ip(collider, beam="b1"):
     return res
 
 
-def crit_phases(collider):
-    collider.lhcb1.cycle("e.ds.l3.b1", inplace=True)
-    collider.lhcb2.cycle("e.ds.l3.b2", inplace=True)
+def connect_octupoles(collider, energy=7000):
+    from scipy.constants import c as clight
+    collider.vars["brho"] = energy * 1e9 / clight
+    # NOTE: Test B1 for now
+    v = collider.vars
+    v["i_oct_b1"] = 0
+    v["kof.a12b1"] = v["kmax_mo"] * v["i_oct_b1"] / v["imax_mo"] / v["brho"]
+    v["kof.a23b1"] = v["kmax_mo"] * v["i_oct_b1"] / v["imax_mo"] / v["brho"]
+    v["kof.a34b1"] = v["kmax_mo"] * v["i_oct_b1"] / v["imax_mo"] / v["brho"]
+    v["kof.a45b1"] = v["kmax_mo"] * v["i_oct_b1"] / v["imax_mo"] / v["brho"]
+    v["kof.a56b1"] = v["kmax_mo"] * v["i_oct_b1"] / v["imax_mo"] / v["brho"]
+    v["kof.a67b1"] = v["kmax_mo"] * v["i_oct_b1"] / v["imax_mo"] / v["brho"]
+    v["kof.a78b1"] = v["kmax_mo"] * v["i_oct_b1"] / v["imax_mo"] / v["brho"]
+    v["kof.a81b1"] = v["kmax_mo"] * v["i_oct_b1"] / v["imax_mo"] / v["brho"]
+    v["kod.a12b1"] = v["kmax_mo"] * v["i_oct_b1"] / v["imax_mo"] / v["brho"]
+    v["kod.a23b1"] = v["kmax_mo"] * v["i_oct_b1"] / v["imax_mo"] / v["brho"]
+    v["kod.a34b1"] = v["kmax_mo"] * v["i_oct_b1"] / v["imax_mo"] / v["brho"]
+    v["kod.a45b1"] = v["kmax_mo"] * v["i_oct_b1"] / v["imax_mo"] / v["brho"]
+    v["kod.a56b1"] = v["kmax_mo"] * v["i_oct_b1"] / v["imax_mo"] / v["brho"]
+    v["kod.a67b1"] = v["kmax_mo"] * v["i_oct_b1"] / v["imax_mo"] / v["brho"]
+    v["kod.a78b1"] = v["kmax_mo"] * v["i_oct_b1"] / v["imax_mo"] / v["brho"]
+    v["kod.a81b1"] = v["kmax_mo"] * v["i_oct_b1"] / v["imax_mo"] / v["brho"]
+
+
+def crit_phases(collider, cycle=False):
+    if cycle:
+        collider.lhcb1.cycle("e.ds.l3.b1", inplace=True)
+        collider.lhcb2.cycle("e.ds.l3.b2", inplace=True)
 
     t1 = collider.lhcb1.twiss()
     t2 = collider.lhcb2.twiss()
-    
-    collider.lhcb1.cycle('lhcb1$start', inplace=True)
-    collider.lhcb2.cycle('lhcb2$end', inplace=True)
+
+    if cycle:
+        collider.lhcb1.cycle('lhcb1$start', inplace=True)
+        collider.lhcb2.cycle('lhcb2$end', inplace=True)
 
     mux_tcphb1 = t1["mux", "tcp.b6l7.b1"]
     muy_tcpvb1 = t1["muy", "tcp.d6l7.b1"]
@@ -182,13 +208,13 @@ def crit_phases(collider):
             "B1 Left": mux_tcphb1 + qx - mux_cchl1b1,
             "B1 Right": mux_tcphb1 - mux_cchr1b1,
             "B2 Left": -mux_tcphb2 + mux_cchl1b2,
-            "B2 Right": -mux_tcphb2 + mux_cchr1b1 + qx,
+            "B2 Right": -mux_tcphb2 + mux_cchr1b2 + qx,
         },
         "CC5V": {
             "B1 Left": muy_tcpvb1 - muy_ccvl5b1,
             "B1 Right": muy_tcpvb1 - muy_ccvr5b1,
             "B2 Left": -muy_tcpvb2 + muy_ccvl5b2 + qy,
-            "B2 Right": -muy_tcpvb2 + muy_ccvr5b1 + qy,
+            "B2 Right": -muy_tcpvb2 + muy_ccvr5b2 + qy,
         },
     }
     mkd_tct = {

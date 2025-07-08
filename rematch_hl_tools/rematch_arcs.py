@@ -68,7 +68,7 @@ def rebal_arc_trim(
     return opt
 
 
-def ats_phase_aux_ir(collider, nir0, nir1, nir2, nir3, nir4, line_name, betx, bety):
+def ats_phase_aux_ir(collider, nir1, nir2, nir3, line_name, betx, bety):
     assert line_name in ['lhcb1', 'lhcb2']
     bn = line_name[-2:]
 
