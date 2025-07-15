@@ -179,10 +179,10 @@ def crit_phases(collider, cycle=False):
     muy_tct8b1 = t1["muy", "tctpv.4l8.b1"]
     mux_mkdob1 = t1["mux", "mkd.o5l6.b1"]
     mux_mkdab1 = t1["mux", "mkd.a5l6.b1"]
-    mux_cchl1b1 = t1["mux", "acfca.4al1.b1"]
-    mux_cchr1b1 = t1["mux", "acfca.4ar1.b1"]
-    muy_ccvl5b1 = t1["muy", "acfca.4al5.b1"]
-    muy_ccvr5b1 = t1["muy", "acfca.4ar5.b1"]
+    mux_cchl1b1 = t1["mux", "acfcah.a4l1.b1"]
+    mux_cchr1b1 = t1["mux", "acfcah.a4r1.b1"]
+    muy_ccvl5b1 = t1["muy", "acfcav.a4l5.b1"]
+    muy_ccvr5b1 = t1["muy", "acfcav.a4r5.b1"]
 
     mux_tcphb2 = t2["mux", "tcp.b6r7.b2"]
     muy_tcpvb2 = t2["muy", "tcp.d6r7.b2"]
@@ -194,10 +194,10 @@ def crit_phases(collider, cycle=False):
     muy_tct8b2 = t2["muy", "tctpv.4r8.b2"]
     mux_mkdob2 = t2["mux", "mkd.o5r6.b2"]
     mux_mkdab2 = t2["mux", "mkd.a5r6.b2"]
-    mux_cchl1b2 = t2["mux", "acfca.4al1.b2"]
-    mux_cchr1b2 = t2["mux", "acfca.4ar1.b2"]
-    muy_ccvl5b2 = t2["muy", "acfca.4al5.b2"]
-    muy_ccvr5b2 = t2["muy", "acfca.4ar5.b2"]
+    mux_cchl1b2 = t2["mux", "acfcah.a4l1.b2"]
+    mux_cchr1b2 = t2["mux", "acfcah.a4r1.b2"]
+    muy_ccvl5b2 = t2["muy", "acfcav.a4l5.b2"]
+    muy_ccvr5b2 = t2["muy", "acfcav.a4r5.b2"]
 
     # NOTE: calulate them
     qx = 62.31
@@ -267,9 +267,10 @@ def crit_phases(collider, cycle=False):
     return (cc_tcp, mkd_tct, tcp_tct)
 
 
-def plot_dmu(tw1, tw2):
+def plot_dmu(tw1, tw2, fig=None, axs=None):
     # fig, axs = plt.subplots(2, 1, figsize=(14, 10.3), dpi=300, sharex=True)
-    fig, axs = plt.subplots(2, 1, sharex=True)
+    if fig is None:
+        fig, axs = plt.subplots(2, 1, sharex=True)
 
     for i, bim in enumerate(["lhcb1", "lhcb2"]):
         dmux = ((tw2[bim].mux % 1) - (tw1[bim].mux % 1)) % 1
@@ -289,5 +290,3 @@ def plot_dmu(tw1, tw2):
         axs[i].legend()
         axs[i].set_xlabel("s [m]")
         axs[i].set_ylabel(r"$\Delta \mu_{x,y}$")
-
-    plt.show()
