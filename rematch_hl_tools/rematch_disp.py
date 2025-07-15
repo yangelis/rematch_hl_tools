@@ -629,7 +629,7 @@ def rematch_disp(
 
     if cycle:
         collider["lhcb1"].cycle("lhcb1$start", inplace=True)
-        collider["lhcb2"].cycle("lhcb2$start", inplace=True)
+        collider["lhcb2"].cycle("lhcb2$end", inplace=True)
         collider["lhcb1"].twiss_default["method"] = "4d"
         collider["lhcb2"].twiss_default["method"] = "4d"
         collider["lhcb2"].twiss_default["reverse"] = True
