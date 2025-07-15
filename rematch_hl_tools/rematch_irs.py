@@ -720,45 +720,75 @@ def rematch_ir6(
     return opt
 
 
-def set_new_ir7_strengths(collider):
+def new_ir7_strengths(collider, apply_all=True, apply_b1=False, apply_b2=False):
     # Addapted from https://gitlab.cern.ch/acc-models/acc-models-lhc/-/blob/hl19/strengths/ir7/re12c6b.str
-    collider.vars["kqt4.l7"] = 0.0012257364160585084
-    collider.vars["kqt4.r7"] = 0.0012659632628095638
-    collider.vars["kqt13.l7b1"] = -0.0048823483573787445
-    collider.vars["kqt12.l7b1"] = -0.004882279788343516
-    collider.vars["kqtl11.l7b1"] = 0.0027739663492968103
-    collider.vars["kqtl10.l7b1"] = 0.004623538857746193
-    collider.vars["kqtl9.l7b1"] = -0.003372747954072591
-    collider.vars["kqtl8.l7b1"] = -0.0023127417813640786
-    collider.vars["kqtl7.l7b1"] = -0.002011344510772721
-    collider.vars["kq6.l7b1"] = 0.0031173363410593766
-    collider.vars["kq6.r7b1"] = -0.0031388056161611565
-    collider.vars["kqtl7.r7b1"] = 0.0009532375359442739
-    collider.vars["kqtl8.r7b1"] = 0.002688438505728887
-    collider.vars["kqtl9.r7b1"] = 0.0033416607916765947
-    collider.vars["kqtl10.r7b1"] = -0.003461273410884878
-    collider.vars["kqtl11.r7b1"] = 0.0010531054411466265
-    collider.vars["kqt12.r7b1"] = -0.0027831205556483702
-    collider.vars["kqt13.r7b1"] = -0.0013509460856456692
+    
+    strs = {"b1":
+        {
+            "kqt4.l7" : 0.0012257364160585084,
+            "kqt4.r7" : 0.0012659632628095638,
+            "kqt13.l7b1" : -0.0048823483573787445,
+            "kqt12.l7b1" : -0.004882279788343516,
+            "kqtl11.l7b1" : 0.0027739663492968103,
+            "kqtl10.l7b1" : 0.004623538857746193,
+            "kqtl9.l7b1" : -0.003372747954072591,
+            "kqtl8.l7b1" : -0.0023127417813640786,
+            "kqtl7.l7b1" : -0.002011344510772721,
+            "kq6.l7b1" : 0.0031173363410593766,
+            "kq6.r7b1" : -0.0031388056161611565,
+            "kqtl7.r7b1" : 0.0009532375359442739,
+            "kqtl8.r7b1" : 0.002688438505728887,
+            "kqtl9.r7b1" : 0.0033416607916765947,
+            "kqtl10.r7b1" : -0.003461273410884878,
+            "kqtl11.r7b1" : 0.0010531054411466265,
+            "kqt12.r7b1" : -0.0027831205556483702,
+            "kqt13.r7b1" : -0.0013509460856456692,
+        },
+        "b2":
+        {
+            "kqt13.l7b2" : -0.004192310485204978,
+            "kqt12.l7b2" : -0.0035271197718106688,
+            "kqtl11.l7b2" : 0.0008993274235722462,
+            "kqtl10.l7b2" : -0.0035044843946580337,
+            "kqtl9.l7b2" : 0.003295485018957867,
+            "kqtl8.l7b2" : 0.002429071850457167,
+            "kqtl7.l7b2" : 0.0008310840304967491,
+            "kq6.l7b2" : -0.0031817725498278727,
+            "kq6.r7b2" : 0.003183554427942885,
+            "kqtl7.r7b2" : -0.0012886165853725183,
+            "kqtl8.r7b2" : -0.0037917967174795034,
+            "kqtl9.r7b2" : -0.0033703081873609005,
+            "kqtl10.r7b2" : 0.0049711605825101994,
+            "kqtl11.r7b2" : 0.002278252114016244,
+            "kqt12.r7b2" : -0.0048808187874553495,
+            "kqt13.r7b2" : -0.0048815559298144,   
+        },
+        "common":
+        {
+            "kqt4.l7": 0.0012257364160585084,
+            "kqt4.r7": 0.0012659632628095638,
+            "kq4.lr7": 0.0011653779946877393,
+            "kq5.lr7": -0.001202569087048791,
+        }
+    }
 
-    collider.vars["kqt13.l7b2"] = -0.004192310485204978
-    collider.vars["kqt12.l7b2"] = -0.0035271197718106688
-    collider.vars["kqtl11.l7b2"] = 0.0008993274235722462
-    collider.vars["kqtl10.l7b2"] = -0.0035044843946580337
-    collider.vars["kqtl9.l7b2"] = 0.003295485018957867
-    collider.vars["kqtl8.l7b2"] = 0.002429071850457167
-    collider.vars["kqtl7.l7b2"] = 0.0008310840304967491
-    collider.vars["kq6.l7b2"] = -0.0031817725498278727
-    collider.vars["kq6.r7b2"] = 0.003183554427942885
-    collider.vars["kqtl7.r7b2"] = -0.0012886165853725183
-    collider.vars["kqtl8.r7b2"] = -0.0037917967174795034
-    collider.vars["kqtl9.r7b2"] = -0.0033703081873609005
-    collider.vars["kqtl10.r7b2"] = 0.0049711605825101994
-    collider.vars["kqtl11.r7b2"] = 0.002278252114016244
-    collider.vars["kqt12.r7b2"] = -0.0048808187874553495
-    collider.vars["kqt13.r7b2"] = -0.0048815559298144
-    collider.vars["kq4.lr7"] = 0.0011653779946877393
-    collider.vars["kq5.lr7"] = -0.001202569087048791
+    if apply_all:
+        for n, k in strs["b1"].items():
+            collider.vars[n] = k
+
+        for n, k in strs["b2"].items():
+            collider.vars[n] = k
+
+        for n, k in strs["common"].items():
+            collider.vars[n] = k
+    elif apply_b1:
+        for n, k in strs["b1"].items():
+            collider.vars[n] = k
+    elif apply_b2:
+        for n, k in strs["b2"].items():
+            collider.vars[n] = k
+    
+    return strs
 
 
 # Addapted from https://gitlab.cern.ch/acc-models/acc-models-lhc/-/blob/hl19/strengths/ir7/re12c6b.str
@@ -821,8 +851,6 @@ def rematch_new_ir7(
                 bety=new_ir7_optics[bn]["bety"],
                 dx=new_ir7_optics[bn]["dx"],
                 dpx=new_ir7_optics[bn]["dpx"],
-                # mux=new_ir7_optics[bn]['mux'],
-                # muy=new_ir7_optics[bn]['muy'],
                 tag="ip7",
             ),
             xt.TargetSet(
@@ -928,6 +956,13 @@ def rematch_new_ir7_both(
                 tag="ip7_b1",
             ),
             xt.TargetSet(
+                line="lhcb1",
+                at="ip7",
+                mux=new_ir7_optics["b1"]["mux"] + boundary_conditions_left["lhcb1"]["67"].mux[-1],
+                muy=new_ir7_optics["b1"]["muy"] + boundary_conditions_left["lhcb1"]["67"].muy[-1],
+                tag='ip7_b1_mu',
+            ),
+            xt.TargetSet(
                 line="lhcb2",
                 at="ip7",
                 alfx=new_ir7_optics["b2"]["alfx"],
@@ -937,6 +972,13 @@ def rematch_new_ir7_both(
                 dx=new_ir7_optics["b2"]["dx"],
                 dpx=new_ir7_optics["b2"]["dpx"],
                 tag="ip7_b2",
+            ),
+            xt.TargetSet(
+                line="lhcb2",
+                at="ip7",
+                mux=new_ir7_optics["b2"]["mux"] + boundary_conditions_left["lhcb2"]["67"].mux[-1],
+                muy=new_ir7_optics["b2"]["muy"] + boundary_conditions_left["lhcb2"]["67"].muy[-1],
+                tag='ip7_b2_mu',
             ),
             xt.TargetSet(
                 line="lhcb1",
@@ -1012,6 +1054,8 @@ def rematch_new_ir7_both(
             xt.Vary("kqt4.r7", tag="common"),
         ],
     )
+
+    opt.disable_targets(tag=["ip7_b1_mu", "ip7_b2_mu"])
 
     if solve:
         opt.solve()
