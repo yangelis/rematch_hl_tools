@@ -266,9 +266,9 @@ def _save_dipoles(collider):
     lines.append("\n!*** Dipoles ***")
 
     dipoles = (
-        "kd1.lr1 kd2.l1 kd2.r1 kd1.l2 kd1.r2 kd2.l2 kd2.r2 "
+        "kd1.l1 kd1.r1 kd2.l1 kd2.r1 kd1.l2 kd1.r2 kd2.l2 kd2.r2 "
         "kd3.lr3 kd4.lr3 kd3.l4 kd3.r4 kd4.l4 kd4.r4 "
-        "kd34.lr3 kd34.lr7 kd1.lr5 kd2.l5 kd2.r5 "
+        "kd34.lr3 kd34.lr7 kd1.l5 kd1.r5 kd2.l5 kd2.r5 "
         "kd3.lr7 kd4.lr7 kd1.l8 kd1.r8 kd2.l8 kd2.r8 kbh.a67 kbh.a78 "
         "ksumd2.l1b2 ksumd2.l2b2 ksumd2.l5b2 ksumd2.l8b2 "
         "ksumd2.r1b2 ksumd2.r2b2 ksumd2.r5b2 ksumd2.r8b2 "
