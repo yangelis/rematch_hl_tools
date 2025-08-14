@@ -3,14 +3,16 @@ from xtrack._temp.lhc_match import get_arc_periodic_solution, compute_ats_phase_
 from .rematch_ir15 import get_presqueezed_tw
 
 
-def get_tw_ip(collider, ip):
+def get_tw_ip(collider, ip, zero_phase=True):
     tw = collider.twiss()
     beta0_b1 = tw["lhcb1"].get_twiss_init(f"s.ds.l{ip}.b1")
-    beta0_b1.mux = 0
-    beta0_b1.muy = 0
     beta0_b2 = tw["lhcb2"].get_twiss_init(f"s.ds.l{ip}.b2")
-    beta0_b2.mux = 0
-    beta0_b2.muy = 0
+    
+    if zero_phase:
+        beta0_b1.mux = 0
+        beta0_b1.muy = 0
+        beta0_b2.mux = 0
+        beta0_b2.muy = 0
 
     tw_ip = collider.twiss(
         start=[f"s.ds.l{ip}.b1", f"s.ds.l{ip}.b2"],
@@ -816,6 +818,72 @@ new_ir7_optics = {
 }
 
 
+def new_ir7_col_targets():
+    tol = 1
+    targets_b1 = [
+        xt.TargetSet(tag="collb1", line="lhcb1", at="tcp.d6l7.b1", betx=354.989, bety=298.968, tol=tol),
+        xt.TargetSet(tag="collb1", line="lhcb1", at="tcp.c6l7.b1", betx=338.912, bety=319.528, tol=tol),
+        xt.TargetSet(tag="collb1", line="lhcb1", at="tcp.b6l7.b1", betx=323.231, bety=340.798, tol=tol),
+        xt.TargetSet(tag="collb1", line="lhcb1", at="tcapa.6l7.b1", betx=172.4, bety=633.496, tol=tol),
+        xt.TargetSet(tag="collb1", line="lhcb1", at="tcapb.6l7.b1", betx=141.825, bety=724.005, tol=tol),
+        xt.TargetSet(tag="collb1", line="lhcb1", at="tcsg.a6l7.b1", betx=95.3755, bety=902.617, tol=tol),
+        xt.TargetSet(tag="collb1", line="lhcb1", at="tcpcv.a6l7.b1", betx=57.7261, bety=1117.76, tol=tol),
+        xt.TargetSet(tag="collb1", line="lhcb1", at="tcapc.6l7.b1", betx=45.1717, bety=1220.65, tol=tol),
+        xt.TargetSet(tag="collb1", line="lhcb1", at="tcsg.b5l7.b1", betx=60.1482, bety=787.091, tol=tol),
+        xt.TargetSet(tag="collb1", line="lhcb1", at="tcsg.a5l7.b1", betx=70.8225, bety=700.973, tol=tol),
+        xt.TargetSet(tag="collb1", line="lhcb1", at="tcsg.d4l7.b1", betx=141.475, bety=352.584, tol=tol),
+        xt.TargetSet(tag="collb1", line="lhcb1", at="tcpch.a4l7.b1", betx=148.712, bety=327.456, tol=tol),
+        xt.TargetSet(tag="collb1", line="lhcb1", at="tcsg.b4l7.b1", betx=99.5584, bety=265.589, tol=tol),
+        xt.TargetSet(tag="collb1", line="lhcb1", at="tcspm.b4l7.b1", betx=98.3511, bety=266.417, tol=tol),
+        xt.TargetSet(tag="collb1", line="lhcb1", at="tcsg.a4l7.b1", betx=97.232, bety=267.276, tol=tol),
+        xt.TargetSet(tag="collb1", line="lhcb1", at="tcsg.a4r7.b1", betx=95.2585, bety=269.09, tol=tol),
+        xt.TargetSet(tag="collb1", line="lhcb1", at="tcsg.b5r7.b1", betx=224.532, bety=198.217, tol=tol),
+        xt.TargetSet(tag="collb1", line="lhcb1", at="tcsg.d5r7.b1", betx=348.338, bety=118.897, tol=tol),
+        xt.TargetSet(tag="collb1", line="lhcb1", at="tcsg.e5r7.b1", betx=383.806, bety=102.739, tol=tol),
+        xt.TargetSet(tag="collb1", line="lhcb1", at="tcspm.e5r7.b1", betx=402.217, bety=95.2115, tol=tol),
+        xt.TargetSet(tag="collb1", line="lhcb1", at="tcsg.6r7.b1", betx=447.333, bety=46.8857, tol=tol),
+        xt.TargetSet(tag="collb1", line="lhcb1", at="tcspm.6r7.b1", betx=431.439, bety=47.7367, tol=tol),
+        xt.TargetSet(tag="collb1", line="lhcb1", at="tcla.a6r7.b1", betx=392.548, bety=50.6834, tol=tol),
+        xt.TargetSet(tag="collb1", line="lhcb1", at="tcla.b6r7.b1", betx=197.929, bety=93.1682, tol=tol),
+        xt.TargetSet(tag="collb1", line="lhcb1", at="tcla.c6r7.b1", betx=69.7591, bety=186.117, tol=tol),
+        xt.TargetSet(tag="collb1", line="lhcb1", at="tcla.d6r7.b1", betx=64.7495, bety=193.264, tol=tol),
+        xt.TargetSet(tag="collb1", line="lhcb1", at="tcla.a7r7.b1", betx=52.8241, bety=173.578, tol=tol),
+    ]
+
+    targets_b2 = [
+        xt.TargetSet(tag="collb2", line="lhcb2", at="tcla.a7l7.b2", betx=50.8888, bety=204.503, tol=tol),
+        xt.TargetSet(tag="collb2", line="lhcb2", at="tcla.d6l7.b2", betx=57.3029, bety=234.07, tol=tol),
+        xt.TargetSet(tag="collb2", line="lhcb2", at="tcla.c6l7.b2", betx=61.7668, bety=224.549, tol=tol),
+        xt.TargetSet(tag="collb2", line="lhcb2", at="tcla.b6l7.b2", betx=180.304, bety=100.29, tol=tol),
+        xt.TargetSet(tag="collb2", line="lhcb2", at="tcla.a6l7.b2", betx=365.046, bety=42.5421, tol=tol),
+        xt.TargetSet(tag="collb2", line="lhcb2", at="tcspm.6l7.b2", betx=402.231, bety=38.3592, tol=tol),
+        xt.TargetSet(tag="collb2", line="lhcb2", at="tcsg.6l7.b2", betx=417.444, bety=37.1186, tol=tol),
+        xt.TargetSet(tag="collb2", line="lhcb2", at="tcspm.e5l7.b2", betx=394.864, bety=76.9155, tol=tol),
+        xt.TargetSet(tag="collb2", line="lhcb2", at="tcsg.e5l7.b2", betx=377.268, bety=83.9082, tol=tol),
+        xt.TargetSet(tag="collb2", line="lhcb2", at="tcsg.d5l7.b2", betx=343.339, bety=99.1051, tol=tol),
+        xt.TargetSet(tag="collb2", line="lhcb2", at="tcsg.b5l7.b2", betx=224.499, bety=176.044, tol=tol),
+        xt.TargetSet(tag="collb2", line="lhcb2", at="tcsg.a4l7.b2", betx=100.816, bety=290.332, tol=tol),
+        xt.TargetSet(tag="collb2", line="lhcb2", at="tcsg.a4r7.b2", betx=109.27, bety=289.687, tol=tol),
+        xt.TargetSet(tag="collb2", line="lhcb2", at="tcspm.b4r7.b2", betx=110.696, bety=289.731, tol=tol),
+        xt.TargetSet(tag="collb2", line="lhcb2", at="tcsg.b4r7.b2", betx=112.203, bety=289.802, tol=tol),
+        xt.TargetSet(tag="collb2", line="lhcb2", at="tcspm.d4r7.b2", betx=158.873, bety=389.812, tol=tol),
+        xt.TargetSet(tag="collb2", line="lhcb2", at="tcsg.d4r7.b2", betx=152.848, bety=412.296, tol=tol),
+        xt.TargetSet(tag="collb2", line="lhcb2", at="tcpch.a5r7.b2", betx=80.6815, bety=785.078, tol=tol),
+        xt.TargetSet(tag="collb2", line="lhcb2", at="tcsg.a5r7.b2", betx=74.8885, bety=829.398, tol=tol),
+        xt.TargetSet(tag="collb2", line="lhcb2", at="tcsg.b5r7.b2", betx=62.8386, bety=934.524, tol=tol),
+        xt.TargetSet(tag="collb2", line="lhcb2", at="tcapc.6r7.b2", betx=41.5991, bety=1523.45, tol=tol),
+        xt.TargetSet(tag="collb2", line="lhcb2", at="tcpcv.a6r7.b2", betx=56.1439, bety=1382.88, tol=tol),
+        xt.TargetSet(tag="collb2", line="lhcb2", at="tcsg.a6r7.b2", betx=92.0841, bety=1142.15, tol=tol),
+        xt.TargetSet(tag="collb2", line="lhcb2", at="tcapb.6r7.b2", betx=144.915, bety=905.764, tol=tol),
+        xt.TargetSet(tag="collb2", line="lhcb2", at="tcapa.6r7.b2", betx=173.042, bety=809.277, tol=tol),
+        xt.TargetSet(tag="collb2", line="lhcb2", at="tcp.b6r7.b2", betx=337.187, bety=438.701, tol=tol),
+        xt.TargetSet(tag="collb2", line="lhcb2", at="tcp.c6r7.b2", betx=354.083, bety=412.116, tol=tol),
+        xt.TargetSet(tag="collb2", line="lhcb2", at="tcp.d6r7.b2", betx=371.415, bety=386.38, tol=tol),
+    ]
+
+    return targets_b1, targets_b2
+
+
 def rematch_new_ir7(
     collider,
     line_name,
@@ -930,6 +998,7 @@ def rematch_new_ir7_both(
     default_tol=None,
 ):
 
+    coll_targets = new_ir7_col_targets()
     opt = collider.match(
         solve=False,
         restore_if_fail=restore,
@@ -1004,7 +1073,7 @@ def rematch_new_ir7_both(
                 mux=mux_ir7_b2+boundary_conditions_left["lhcb2"]["67"]['mux', 's.ds.l7.b2'],
                 muy=muy_ir7_b2+boundary_conditions_left["lhcb2"]["67"]['muy', 's.ds.l7.b2'],
             ),
-        ],
+        ] + coll_targets[0] + coll_targets[1],
         vary=[
             xt.VaryList(
                 [
