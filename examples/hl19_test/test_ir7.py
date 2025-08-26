@@ -1,7 +1,7 @@
 # %%
 import xtrack as xt
 import rematch_hl_tools
-from rematch_hl_tools import qtlim1
+from rematch_hl_tools import get_tw_ip, save_to_madx
 import xtrack._temp.lhc_match as lm
 from xtrack._temp.lhc_match import (
     get_arc_periodic_solution,
@@ -11,7 +11,7 @@ from xtrack._temp.lhc_match import (
 from matplotlib import pyplot as plt
 import numpy as np
 
-from rematch_hl_tools import save_to_madx
+from rematch_hl_tools.utils import plot_dmu, check_ip
 
 
 # %%
@@ -19,13 +19,13 @@ plt.rcParams.update(
     {
         "figure.figsize": (7, 6),
         # "font.size": 19,
-        # "axes.titlesize": 19,
-        # "axes.labelsize": 19,
-        # "xtick.labelsize": 18,
-        # "ytick.labelsize": 18,
-        # "legend.fontsize": 19,
-        # "figure.titlesize": 12,
-        # "lines.linewidth": 1.0,
+        "axes.titlesize": 19,
+        "axes.labelsize": 19,
+        "xtick.labelsize": 18,
+        "ytick.labelsize": 18,
+        "legend.fontsize": 19,
+        "figure.titlesize": 12,
+        "lines.linewidth": 2.0,
         "lines.markersize": 4,
         "legend.loc": "best",
         "legend.frameon": True,
@@ -40,87 +40,42 @@ get_ipython().run_line_magic("matplotlib", "inline")
 # %%
 hl19_path = "/home/iangelis/Projects/hllhc_optics/hl19"
 # %%
-env1 = xt.Environment.from_json("../build_hl/hl19_round_150_1500.json")
-env = xt.Environment.from_json("../build_hl/hl19_round_150_1500.json")
+env = xt.Environment.from_json("../build_hl/hl19.json")
+env1 = xt.Environment.from_json("../build_hl/hl19.json")
+
+# %%
+# env.vars.load_madx_optics_file(
+#     f"{hl19_path}/strengths/round/opt_round_150_1500_optphases.madx"
+# )
+env.vars.load_madx_optics_file("optics/hl19_opt_round_150_newir7_single.madx")
+
 
 env1.vars.load_madx_optics_file(
-    f"{hl19_path}/strengths/round/opt_round_150_1500_optphases.madx"
-)
-env.vars.load_madx_optics_file(
     f"{hl19_path}/strengths/round/opt_round_150_1500_optphases.madx"
 )
 # %%
 tw = env.twiss()
 # %%
+rematch_hl_tools.set_limits_steps_ir234678(env, nrj=7000)
+# %%
 # env.lhcb1.cycle('s.ds.l3.b1',inplace=True)
 # %%
 default_tol = {None: 1e-8, "betx": 1e-6, "bety": 1e-6}
 # %%
-start_b1 = "s.ds.l7.b1"
-start_b2 = "s.ds.l7.b2"
-
-beta0_b1 = tw["lhcb1"].get_twiss_init(start_b1)
-beta0_b1.mux = 0
-beta0_b1.muy = 0
-
-beta0_b2 = tw["lhcb2"].get_twiss_init(start_b2)
-beta0_b2.mux = 0
-beta0_b2.muy = 0
-
-
-twir7_v0 = env.twiss(
-    start=[start_b1, start_b2],
-    end=["e.ds.r7.b1", "e.ds.r7.b2"],
-    init=[beta0_b1, beta0_b2],
-)
-# %%
-
-start_b1 = "s.ds.l7.b1"
-start_b2 = "s.ds.l7.b2"
-
-beta0_b1 = tw["lhcb1"].get_twiss_init(start_b1)
-beta0_b1.mux = 0
-beta0_b1.muy = 0
-
-beta0_b2 = tw["lhcb2"].get_twiss_init(start_b2)
-beta0_b2.mux = 0
-beta0_b2.muy = 0
-
-twir7_v1 = env.twiss(
-    start=[start_b1, start_b2],
-    end=["e.ds.r7.b1", "e.ds.r7.b2"],
-    init=[beta0_b1, beta0_b2],
-)
+twir7_v1 = get_tw_ip(env, 7)
 # %%
 twir7_v1["lhcb1"].plot("betx bety", "dx")
 twir7_v1["lhcb2"].plot("betx bety", "dx")
 # %%
 tw_non_ats_arcs = get_arc_periodic_solution(env, arc_name=["23", "34", "67", "78"])
-
 # %%
 optimizers = {}
-
 # %%
-rematch_hl_tools.rematch_irs.set_new_ir7_strengths(env)
+ir7_ks = rematch_hl_tools.rematch_irs.new_ir7_strengths(env, apply_all=True)
 # %%
 tw2 = env.twiss()
 # %%
-start_b1 = "s.ds.l7.b1"
-start_b2 = "s.ds.l7.b2"
-
-beta0_b1 = tw2["lhcb1"].get_twiss_init(start_b1)
-beta0_b1.mux = 0
-beta0_b1.muy = 0
-
-beta0_b2 = tw2["lhcb2"].get_twiss_init(start_b2)
-beta0_b2.mux = 0
-beta0_b2.muy = 0
-
-twir7_v2 = env.twiss(
-    start=[start_b1, start_b2],
-    end=["e.ds.r7.b1", "e.ds.r7.b2"],
-    init=[beta0_b1, beta0_b2],
-)
+twir7_v2 = get_tw_ip(env, 7)
 # %%
 twir7_v2["lhcb1"].plot("betx bety", "dx")
 twir7_v2["lhcb2"].plot("betx bety", "dx")
@@ -138,19 +93,17 @@ optimizers["ir7b1"] = rematch_hl_tools.rematch_irs.rematch_new_ir7(
     assert_within_tol=False,
 )
 # %%
-# optimizers["ir7b1"].step(10)
+optimizers["ir7b1"].disable_targets(tag=["ip7_mux", "ip7_muy"])
+optimizers["ir7b1"].solve()
 # %%
 optimizers["ir7b1"].disable_targets(tag="ip7")
-optimizers["ir7b1"].disable_targets(tag="ip7_mux")
-optimizers["ir7b1"].disable_targets(tag="ip7_muy")
-# %%
-# optimizers["ir7b1"].enable_targets(id=4)
-# optimizers["ir7b1"].enable_targets(id=5)
-# %%
-# optimizers["ir7b1"].enable_vary(tag="q4")
-# optimizers["ir7b1"].enable_vary(tag="q5")
+optimizers["ir7b1"].disable_targets(tag=["ip7_mux", "ip7_muy"])
+# optimizers["ir7b1"].disable_targets(id=[12, 13])
 # %%
 optimizers["ir7b1"].solve()
+# %%
+optimizers["ir7b1"].target_status()
+
 # %%
 optimizers["ir7b2"] = rematch_hl_tools.rematch_irs.rematch_new_ir7(
     restore=False,
@@ -165,40 +118,23 @@ optimizers["ir7b2"] = rematch_hl_tools.rematch_irs.rematch_new_ir7(
     assert_within_tol=False,
 )
 # %%
-# optimizers["ir7b2"].step(10)
+optimizers["ir7b2"].disable_targets(tag=["ip7_mux", "ip7_muy"])
+# optimizers["ir7b2"].disable_vary(id=7)
+optimizers["ir7b2"].solve()
 # %%
 optimizers["ir7b2"].disable_targets(tag="ip7")
-optimizers["ir7b2"].disable_targets(tag="ip7_mux")
-optimizers["ir7b2"].disable_targets(tag="ip7_muy")
+optimizers["ir7b2"].disable_targets(tag=["ip7_mux", "ip7_muy"])
+# optimizers["ir7b2"].disable_targets(id=[12, 13])
 # %%
-# optimizers["ir7b2"].enable_vary(tag="q4")
-# optimizers["ir7b2"].enable_vary(tag="q5")
-# %%
-# optimizers["ir7b2"].enable_targets(id=4)
-# optimizers["ir7b2"].enable_targets(id=5)
-# %%
+optimizers["ir7b2"].enable_targets(id=1)
+# optimizers["ir7b2"].enable_vary(id=7)
 optimizers["ir7b2"].solve()
+# %%
+optimizers["ir7b2"].target_status()
 # %%
 tw_v2 = env.twiss()
 # %%
-start_b1 = "s.ds.l7.b1"
-# start_b1 = "s.ds.r6.b1"
-start_b2 = "s.ds.l7.b2"
-
-beta0_b1 = tw_v2["lhcb1"].get_twiss_init(start_b1)
-beta0_b1.mux = 0
-beta0_b1.muy = 0
-
-beta0_b2 = tw_v2["lhcb2"].get_twiss_init(start_b2)
-beta0_b2.mux = 0
-beta0_b2.muy = 0
-
-
-twir7 = env.twiss(
-    start=[start_b1, start_b2],
-    end=["e.ds.r7.b1", "e.ds.r7.b2"],
-    init=[beta0_b1, beta0_b2],
-)
+twir7 = get_tw_ip(env, 7)
 # %%
 twir7["lhcb1"].plot("betx bety", "dx")
 twir7["lhcb2"].plot("betx bety", "dx")
@@ -213,32 +149,38 @@ print(twir7.lhcb2.rows["ip7"].cols["mux muy"])
 # %%
 rematch_hl_tools.rematch_irs.new_ir7_optics["b2"]
 # %%
-
-
+tw_v2 = env.twiss()
+tw = env1.twiss()
 
 # %%
-fig, axs = plt.subplots(2, 1, figsize=(14, 10.3), dpi=300, sharex=True)
-
+fig, axs = plt.subplots(2, 1, figsize=(11, 8), dpi=100, sharex=False)
+tw1=env1.twiss(); tw2=env.twiss()
+fig.subplots_adjust(hspace=0.5)
 for i, bim in enumerate(["lhcb1", "lhcb2"]):
-    dmux = ((tw_v2[bim].mux % 1) - (tw[bim].mux % 1)) % 1
+    dmux = ((tw2[bim].mux % 1) - (tw1[bim].mux % 1)) % 1
     dmux = np.where(dmux > 0.5, dmux - 1, dmux)
-    dmuy = ((tw_v2[bim].muy % 1) - (tw[bim].muy % 1)) % 1
+    dmuy = ((tw2[bim].muy % 1) - (tw1[bim].muy % 1)) % 1
     dmuy = np.where(dmuy > 0.5, dmuy - 1, dmuy)
 
-    axs[i].plot(tw[bim].s, dmux, label="DMUX")
-    axs[i].plot(tw[bim].s, dmuy, label="DMUY")
+    axs[i].plot(tw2[bim].s, dmux, label=r"$\Delta \mu_{x}$")
+    axs[i].plot(tw2[bim].s, dmuy, label=r"$\Delta \mu_{y}$")
 
-    axs_t = axs[i].twiny()
-    axs_t.set_xticks(tw[bim].rows["ip.*"].s, tw[bim].rows["ip.*"].name)
-    axs_t.set_xlim(axs[i].get_xlim()[0], axs[i].get_xlim()[1])
+    axs[i].set_xlim(tw2[bim]['s', 'ip6'], tw2[bim]['s', 'ip8'])
 
 for i in range(2):
+    axs_t = axs[i].twiny()
+    axs_t.set_xticks(tw1[f"lhcb{i+1}"].rows["ip.*"].s, tw1[f"lhcb{i+1}"].rows["ip.*"].name)
+    axs_t.set_xlim(axs[i].get_xlim()[0], axs[i].get_xlim()[1])
     axs[i].grid()
     axs[i].legend()
     axs[i].set_xlabel("s [m]")
-    axs[i].set_ylabel(r"$\Delta \mu_{x,y}$")
-
+    axs[i].set_ylabel(r"$\Delta \mu_{x,y} {\rm [2\pi]}$")
 plt.show()
+# %%
+check_ip(env, "b1")
+# %%
+check_ip(env, "b2")
+
 # %%
 # opt_tune_again = rematch_hl_tools.rematch_tune_chroma.rematch_tune_arc(
 #     env, arcs=[23, 34], default_targets=True, solve=True
@@ -248,9 +190,19 @@ plt.show()
 # %%
 opt_chroma = rematch_hl_tools.rematch_chroma(env, default_targets=True, solve=True)
 # %%
+opt_chroma["b1"].target_status()
+# %%
+opt_chroma["b2"].target_status()
+# %%
+check_ip(env, "b1")
+# %%
+check_ip(env, "b2")
+# %%
 rematch_hl_tools.mk_arc_trims(env)
 # %%
 rematch_hl_tools.update_stored_vals_ips(env)
 # %%
-with open("optics/opt_round_150_newir7_v1.madx", "w") as f:
+with open("optics/hl19_opt_round_150_newir7_single.madx", "w") as f:
     save_to_madx.save_optics_hllhc(env, f)
+
+# %%
