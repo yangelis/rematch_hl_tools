@@ -170,3 +170,90 @@ def rematch_crabs(
     }
 
     return (opts, crab_angles)
+
+
+
+def match_cc_rfmultipole(
+    collider,
+    line_name,
+    ip,
+    hv,
+    z_crab=1e-3,
+    default_tol={"x": 1e-20, "px": 1e-20, "y": 1e-20, "py": 1e-20},
+    solve=True,
+):
+    collider.vars["z_crab"] = z_crab
+
+    irn = ip[2]
+    bim = line_name[-2:]
+    signb = 1
+    if line_name == "lhcb2":
+        signb = -1
+
+    targets = None
+    if hv == "h":
+        targets = [xt.TargetSet(at=ip, px=0, x=1e-6 * z_crab * signb)]
+    elif hv == "v":
+        targets = [xt.TargetSet(at=ip, py=0, y=1e-6 * z_crab * signb)]
+
+    collider.vars[f"vcrabb4r{irn}.{bim}"] = collider.vars[f"vcraba4r{irn}.{bim}"]
+    collider.vars[f"vcrabb4l{irn}.{bim}"] = collider.vars[f"vcraba4l{irn}.{bim}"]
+    vary = xt.VaryList([f"vcraba4r{irn}.{bim}", f"vcraba4l{irn}.{bim}"])
+
+    opt = collider[line_name].match(
+        solve=False,
+        restore_if_fail=False,
+        assert_within_tol=False,
+        verbose=False,
+        default_tol=default_tol,
+        targets=targets,
+        vary=vary,
+    )
+
+    if solve:
+        opt.solve()
+    # collider.vars[f"vcrabb4r{irn}.{bim}"] = collider.varval[f"vcraba4r{irn}.{bim}"]
+    # collider.vars[f"vcrabb4l{irn}.{bim}"] = collider.varval[f"vcraba4l{irn}.{bim}"]
+
+    collider.vars[f"on_crab{irn}"] = 1
+    collider.vars[f"vcraba4r{irn}.{bim}"] = collider.varval[f"vcraba4r{irn}.{bim}"] * collider.vars[f"on_crab{irn}"]
+    collider.vars[f"vcraba4l{irn}.{bim}"] = collider.varval[f"vcraba4l{irn}.{bim}"] * collider.vars[f"on_crab{irn}"]
+    collider.vars[f"vcrabb4r{irn}.{bim}"] = collider.varval[f"vcraba4r{irn}.{bim}"] * collider.vars[f"on_crab{irn}"]
+    collider.vars[f"vcrabb4l{irn}.{bim}"] = collider.varval[f"vcraba4l{irn}.{bim}"] * collider.vars[f"on_crab{irn}"]
+    collider.vars[f"on_crab{irn}"] = 0
+
+    return opt
+
+def rematch_crabs_rfmultipole(
+    collider,
+    z_crab=1e-3,
+    nrj=7000,
+    default_tol={"x": 1e-20, "px": 1e-20, "y": 1e-20, "py": 1e-20},
+    reset_values=True,
+    solve=True,
+):
+    
+    if reset_values:
+        for ip in [1, 5]:
+            collider.vars[f"on_crab{ip}"] = 0
+            for bim in ["b1", "b2"]:
+                # Initial condition of 10 MV
+                collider.vars[f"vcraba4r{ip}.{bim}"] = 10.0
+                collider.vars[f"vcraba4l{ip}.{bim}"] = 10.0
+                collider.vars[f"vcrabb4r{ip}.{bim}"] = 10.0
+                collider.vars[f"vcrabb4l{ip}.{bim}"] = 10.0
+
+    # NOTE: fixed planes in the sequence
+    opt_cc_ip1_b1 = match_cc_rfmultipole(collider, "lhcb1", "ip1", "h", z_crab, default_tol, solve)
+    opt_cc_ip1_b2 = match_cc_rfmultipole(collider, "lhcb2", "ip1", "h", z_crab, default_tol, solve)
+    opt_cc_ip5_b1 = match_cc_rfmultipole(collider, "lhcb1", "ip5", "v", z_crab, default_tol, solve)
+    opt_cc_ip5_b2 = match_cc_rfmultipole(collider, "lhcb2", "ip5", "v", z_crab, default_tol, solve)
+
+    opts = {
+        "cc_ip1_b1": opt_cc_ip1_b1,
+        "cc_ip1_b2": opt_cc_ip1_b2,
+        "cc_ip5_b1": opt_cc_ip5_b1,
+        "cc_ip5_b2": opt_cc_ip5_b2,
+    }
+
+    return opts
