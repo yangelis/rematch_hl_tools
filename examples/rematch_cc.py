@@ -3,7 +3,7 @@ import xtrack as xt
 import rematch_hl_tools
 from matplotlib import pyplot as plt
 
-from utils import set_vars, configs
+from rematch_hl_tools.utils import set_vars, configs
 
 # %%
 env1 = xt.Environment.from_json("build_hl/hl_round_1000.json")
