@@ -135,6 +135,8 @@ def set_limits_steps_quads_ip15(collider):
         "kqt13.r5b2": {"step": 1e-6, "limits": (-sch * qtlim5, sch * qtlim5)},
     }
 
+    collider.vars.vary_default.update(quads_ir15_defaults)
+
 
 def set_limits_steps_orbit_ip15(collider):
     orbit_correctors_ip15_limits = {
