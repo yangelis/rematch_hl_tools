@@ -290,3 +290,15 @@ def plot_dmu(tw1, tw2, fig=None, axs=None):
         axs[i].legend()
         axs[i].set_xlabel("s [m]")
         axs[i].set_ylabel(r"$\Delta \mu_{x,y}$")
+
+
+
+import pandas as pd
+
+def phases_table(env, table=None):
+    if table is None:
+        table = crit_phases(env)
+    print(pd.DataFrame(table[0]).transpose().to_markdown())
+    print(pd.DataFrame(table[1]).transpose().to_markdown())
+    print(pd.DataFrame(table[2]).transpose().to_markdown())
+    print("\n\n\n")
