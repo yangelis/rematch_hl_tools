@@ -996,9 +996,14 @@ def rematch_new_ir7_both(
     restore=True,
     assert_within_tol=True,
     default_tol=None,
+    collimator_targets=False,
 ):
 
-    coll_targets = new_ir7_col_targets()
+    if collimator_targets:
+        coll_targets = new_ir7_col_targets()
+    else:
+        coll_targets = [[], []]
+
     opt = collider.match(
         solve=False,
         restore_if_fail=restore,
