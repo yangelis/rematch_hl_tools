@@ -28,4 +28,4 @@ from .mk_arc_trims import mk_arc_trims
 
 from .rematch_xing15_manual_knobs import *
 
-from .utils import *
+from .utils import check_ip, set_vars, connect_octupoles, crit_phases, phases_table

@@ -1,6 +1,28 @@
 import xtrack as xt
 
 
+def get_cc_names(hl_version='1.6'):
+    '''
+    Crab names for the match of orbit knobs in IP1, IP5
+    '''
+    crabs = {}
+    crabs['ip1'] = {}
+    crabs["ip5"] = {}
+    if hl_version == '1.9':
+        crabs['ip1']['b1'] = ["acfcah.b4l1.b1", "acfcah.b4r1.b1"]
+        crabs["ip5"]['b1'] = ["acfcav.b4l5.b1", "acfcav.b4r5.b1"]
+        crabs['ip1']['b2'] = ["acfcah.b4l1.b2", "acfcah.b4r1.b2"]
+        crabs["ip5"]['b2'] = ["acfcav.b4l5.b2", "acfcav.b4r5.b2"]
+
+    elif hl_version == '1.6':
+        crabs['ip1']['b1'] = ["acfca.4bl1.b1", "acfca.4br1.b1"]
+        crabs["ip5"]['b1'] = ["acfca.4bl5.b1", "acfca.4br5.b1"]
+        crabs['ip1']['b2'] = ["acfca.4bl1.b2", "acfca.4br1.b2"]
+        crabs["ip5"]['b2'] = ["acfca.4bl5.b2", "acfca.4br5.b2"]
+
+    return crabs
+
+
 def match_xing15_hv(
     collider,
     knob_fmt,
@@ -250,6 +272,7 @@ def match_orbit_knobs_ip15(
     angle_match=295,
     sep_match=2,
     aangle_match=1,
+    hl_version='1.6'
 ):
     cvars = collider.vars
 
@@ -797,6 +820,9 @@ def match_orbit_knobs_ip15(
     opt_a5v.solve()
     opt_a5v.generate_knob()
 
+    # Get correct crab names
+    crab_names = get_cc_names(hl_version=hl_version)
+
     ###############################
     ########### on_ccp ###########
     ###############################
@@ -809,10 +835,10 @@ def match_orbit_knobs_ip15(
             xt.TargetSet(line="lhcb2", at="ip1", x=0, px=0),
         ]
         + [
-            xt.TargetSet(line="lhcb1", at="acfca.4bl1.b1", x=off * 1e-3, px=0),
-            xt.TargetSet(line="lhcb2", at="acfca.4bl1.b2", x=off * 1e-3, px=0),
-            xt.TargetSet(line="lhcb1", at="acfca.4br1.b1", x=off * 1e-3, px=0),
-            xt.TargetSet(line="lhcb2", at="acfca.4br1.b2", x=off * 1e-3, px=0),
+            xt.TargetSet(line="lhcb1", at=crab_names['ip1']['b1'][0], x=off * 1e-3, px=0),
+            xt.TargetSet(line="lhcb2", at=crab_names['ip1']['b2'][0], x=off * 1e-3, px=0),
+            xt.TargetSet(line="lhcb1", at=crab_names['ip1']['b1'][1], x=off * 1e-3, px=0),
+            xt.TargetSet(line="lhcb2", at=crab_names['ip1']['b2'][1], x=off * 1e-3, px=0),
         ]
     )
 
@@ -836,10 +862,10 @@ def match_orbit_knobs_ip15(
             xt.TargetSet(line="lhcb2", at="ip1", y=0, py=0),
         ]
         + [
-            xt.TargetSet(line="lhcb1", at="acfca.4bl1.b1", y=off * 1e-3, py=0),
-            xt.TargetSet(line="lhcb2", at="acfca.4bl1.b2", y=off * 1e-3, py=0),
-            xt.TargetSet(line="lhcb1", at="acfca.4br1.b1", y=off * 1e-3, py=0),
-            xt.TargetSet(line="lhcb2", at="acfca.4br1.b2", y=off * 1e-3, py=0),
+            xt.TargetSet(line="lhcb1", at=crab_names['ip1']['b1'][0], y=off * 1e-3, py=0),
+            xt.TargetSet(line="lhcb2", at=crab_names['ip1']['b2'][0], y=off * 1e-3, py=0),
+            xt.TargetSet(line="lhcb1", at=crab_names['ip1']['b1'][1], y=off * 1e-3, py=0),
+            xt.TargetSet(line="lhcb2", at=crab_names['ip1']['b2'][1], y=off * 1e-3, py=0),
         ]
     )
 
@@ -863,10 +889,10 @@ def match_orbit_knobs_ip15(
             xt.TargetSet(line="lhcb2", at="ip5", x=0, px=0),
         ]
         + [
-            xt.TargetSet(line="lhcb1", at="acfca.4bl5.b1", x=off * 1e-3, px=0),
-            xt.TargetSet(line="lhcb2", at="acfca.4bl5.b2", x=off * 1e-3, px=0),
-            xt.TargetSet(line="lhcb1", at="acfca.4br5.b1", x=off * 1e-3, px=0),
-            xt.TargetSet(line="lhcb2", at="acfca.4br5.b2", x=off * 1e-3, px=0),
+            xt.TargetSet(line="lhcb1", at=crab_names['ip5']['b1'][0], x=off * 1e-3, px=0),
+            xt.TargetSet(line="lhcb2", at=crab_names['ip5']['b2'][0], x=off * 1e-3, px=0),
+            xt.TargetSet(line="lhcb1", at=crab_names['ip5']['b1'][1], x=off * 1e-3, px=0),
+            xt.TargetSet(line="lhcb2", at=crab_names['ip5']['b2'][1], x=off * 1e-3, px=0),
         ]
     )
 
@@ -890,10 +916,10 @@ def match_orbit_knobs_ip15(
             xt.TargetSet(line="lhcb2", at="ip5", y=0, py=0),
         ]
         + [
-            xt.TargetSet(line="lhcb1", at="acfca.4bl5.b1", y=off * 1e-3, py=0),
-            xt.TargetSet(line="lhcb2", at="acfca.4bl5.b2", y=off * 1e-3, py=0),
-            xt.TargetSet(line="lhcb1", at="acfca.4br5.b1", y=off * 1e-3, py=0),
-            xt.TargetSet(line="lhcb2", at="acfca.4br5.b2", y=off * 1e-3, py=0),
+            xt.TargetSet(line="lhcb1", at=crab_names['ip5']['b1'][0], y=off * 1e-3, py=0),
+            xt.TargetSet(line="lhcb2", at=crab_names['ip5']['b2'][0], y=off * 1e-3, py=0),
+            xt.TargetSet(line="lhcb1", at=crab_names['ip5']['b1'][1], y=off * 1e-3, py=0),
+            xt.TargetSet(line="lhcb2", at=crab_names['ip5']['b2'][1], y=off * 1e-3, py=0),
         ]
     )
 
@@ -922,10 +948,10 @@ def match_orbit_knobs_ip15(
             xt.TargetSet(line="lhcb2", at="ip1", x=0, px=0),
         ]
         + [
-            xt.TargetSet(line="lhcb1", at="acfca.4bl1.b1", x=off * 1e-3, px=0),
-            xt.TargetSet(line="lhcb2", at="acfca.4bl1.b2", x=-off * 1e-3, px=0),
-            xt.TargetSet(line="lhcb1", at="acfca.4br1.b1", x=off * 1e-3, px=0),
-            xt.TargetSet(line="lhcb2", at="acfca.4br1.b2", x=-off * 1e-3, px=0),
+            xt.TargetSet(line="lhcb1", at=crab_names['ip1']['b1'][0], x=off * 1e-3, px=0),
+            xt.TargetSet(line="lhcb2", at=crab_names['ip1']['b2'][0], x=-off * 1e-3, px=0),
+            xt.TargetSet(line="lhcb1", at=crab_names['ip1']['b1'][1], x=off * 1e-3, px=0),
+            xt.TargetSet(line="lhcb2", at=crab_names['ip1']['b2'][1], x=-off * 1e-3, px=0),
         ]
     )
 
@@ -949,10 +975,10 @@ def match_orbit_knobs_ip15(
             xt.TargetSet(line="lhcb2", at="ip1", y=0, py=0),
         ]
         + [
-            xt.TargetSet(line="lhcb1", at="acfca.4bl1.b1", y=off * 1e-3, py=0),
-            xt.TargetSet(line="lhcb2", at="acfca.4bl1.b2", y=-off * 1e-3, py=0),
-            xt.TargetSet(line="lhcb1", at="acfca.4br1.b1", y=off * 1e-3, py=0),
-            xt.TargetSet(line="lhcb2", at="acfca.4br1.b2", y=-off * 1e-3, py=0),
+            xt.TargetSet(line="lhcb1", at=crab_names['ip1']['b1'][0], y=off * 1e-3, py=0),
+            xt.TargetSet(line="lhcb2", at=crab_names['ip1']['b2'][0], y=-off * 1e-3, py=0),
+            xt.TargetSet(line="lhcb1", at=crab_names['ip1']['b1'][1], y=off * 1e-3, py=0),
+            xt.TargetSet(line="lhcb2", at=crab_names['ip1']['b2'][1], y=-off * 1e-3, py=0),
         ]
     )
 
@@ -976,10 +1002,10 @@ def match_orbit_knobs_ip15(
             xt.TargetSet(line="lhcb2", at="ip5", x=0, px=0),
         ]
         + [
-            xt.TargetSet(line="lhcb1", at="acfca.4bl5.b1", x=off * 1e-3, px=0),
-            xt.TargetSet(line="lhcb2", at="acfca.4bl5.b2", x=-off * 1e-3, px=0),
-            xt.TargetSet(line="lhcb1", at="acfca.4br5.b1", x=off * 1e-3, px=0),
-            xt.TargetSet(line="lhcb2", at="acfca.4br5.b2", x=-off * 1e-3, px=0),
+            xt.TargetSet(line="lhcb1", at=crab_names['ip5']['b1'][0], x=off * 1e-3, px=0),
+            xt.TargetSet(line="lhcb2", at=crab_names['ip5']['b2'][0], x=-off * 1e-3, px=0),
+            xt.TargetSet(line="lhcb1", at=crab_names['ip5']['b1'][1], x=off * 1e-3, px=0),
+            xt.TargetSet(line="lhcb2", at=crab_names['ip5']['b2'][1], x=-off * 1e-3, px=0),
         ]
     )
 
@@ -1003,10 +1029,10 @@ def match_orbit_knobs_ip15(
             xt.TargetSet(line="lhcb2", at="ip5", y=0, py=0),
         ]
         + [
-            xt.TargetSet(line="lhcb1", at="acfca.4bl5.b1", y=off * 1e-3, py=0),
-            xt.TargetSet(line="lhcb2", at="acfca.4bl5.b2", y=-off * 1e-3, py=0),
-            xt.TargetSet(line="lhcb1", at="acfca.4br5.b1", y=off * 1e-3, py=0),
-            xt.TargetSet(line="lhcb2", at="acfca.4br5.b2", y=-off * 1e-3, py=0),
+            xt.TargetSet(line="lhcb1", at=crab_names['ip5']['b1'][0], y=off * 1e-3, py=0),
+            xt.TargetSet(line="lhcb2", at=crab_names['ip5']['b2'][0], y=-off * 1e-3, py=0),
+            xt.TargetSet(line="lhcb1", at=crab_names['ip5']['b1'][1], y=off * 1e-3, py=0),
+            xt.TargetSet(line="lhcb2", at=crab_names['ip5']['b2'][1], y=-off * 1e-3, py=0),
         ]
     )
 
@@ -1035,10 +1061,10 @@ def match_orbit_knobs_ip15(
             xt.TargetSet(line="lhcb2", at="ip1", x=0, px=0),
         ]
         + [
-            xt.TargetSet(line="lhcb1", at="acfca.4bl1.b1", x=off * 1e-3),
-            xt.TargetSet(line="lhcb2", at="acfca.4bl1.b2", x=off * 1e-3),
-            xt.TargetSet(line="lhcb1", at="acfca.4br1.b1", x=off * 1e-3),
-            xt.TargetSet(line="lhcb2", at="acfca.4br1.b2", x=off * 1e-3),
+            xt.TargetSet(line="lhcb1", at=crab_names['ip1']['b1'][0], x=off * 1e-3),
+            xt.TargetSet(line="lhcb2", at=crab_names['ip1']['b2'][0], x=off * 1e-3),
+            xt.TargetSet(line="lhcb1", at=crab_names['ip1']['b1'][1], x=off * 1e-3),
+            xt.TargetSet(line="lhcb2", at=crab_names['ip1']['b2'][1], x=off * 1e-3),
         ]
     )
 
@@ -1067,10 +1093,10 @@ def match_orbit_knobs_ip15(
             xt.TargetSet(line="lhcb2", at="ip1", y=0, py=0),
         ]
         + [
-            xt.TargetSet(line="lhcb1", at="acfca.4bl1.b1", y=off * 1e-3),
-            xt.TargetSet(line="lhcb2", at="acfca.4bl1.b2", y=off * 1e-3),
-            xt.TargetSet(line="lhcb1", at="acfca.4br1.b1", y=off * 1e-3),
-            xt.TargetSet(line="lhcb2", at="acfca.4br1.b2", y=off * 1e-3),
+            xt.TargetSet(line="lhcb1", at=crab_names['ip1']['b1'][0], y=off * 1e-3),
+            xt.TargetSet(line="lhcb2", at=crab_names['ip1']['b2'][0], y=off * 1e-3),
+            xt.TargetSet(line="lhcb1", at=crab_names['ip1']['b1'][1], y=off * 1e-3),
+            xt.TargetSet(line="lhcb2", at=crab_names['ip1']['b2'][1], y=off * 1e-3),
         ]
     )
 
@@ -1099,10 +1125,10 @@ def match_orbit_knobs_ip15(
             xt.TargetSet(line="lhcb2", at="ip5", x=0, px=0),
         ]
         + [
-            xt.TargetSet(line="lhcb1", at="acfca.4bl5.b1", x=off * 1e-3),
-            xt.TargetSet(line="lhcb2", at="acfca.4bl5.b2", x=off * 1e-3),
-            xt.TargetSet(line="lhcb1", at="acfca.4br5.b1", x=off * 1e-3),
-            xt.TargetSet(line="lhcb2", at="acfca.4br5.b2", x=off * 1e-3),
+            xt.TargetSet(line="lhcb1", at=crab_names['ip5']['b1'][0], x=off * 1e-3),
+            xt.TargetSet(line="lhcb2", at=crab_names['ip5']['b2'][0], x=off * 1e-3),
+            xt.TargetSet(line="lhcb1", at=crab_names['ip5']['b1'][1], x=off * 1e-3),
+            xt.TargetSet(line="lhcb2", at=crab_names['ip5']['b2'][1], x=off * 1e-3),
         ]
     )
 
@@ -1131,10 +1157,10 @@ def match_orbit_knobs_ip15(
             xt.TargetSet(line="lhcb2", at="ip5", y=0, py=0),
         ]
         + [
-            xt.TargetSet(line="lhcb1", at="acfca.4bl5.b1", y=off * 1e-3),
-            xt.TargetSet(line="lhcb2", at="acfca.4bl5.b2", y=off * 1e-3),
-            xt.TargetSet(line="lhcb1", at="acfca.4br5.b1", y=off * 1e-3),
-            xt.TargetSet(line="lhcb2", at="acfca.4br5.b2", y=off * 1e-3),
+            xt.TargetSet(line="lhcb1", at=crab_names['ip5']['b1'][0], y=off * 1e-3),
+            xt.TargetSet(line="lhcb2", at=crab_names['ip5']['b2'][0], y=off * 1e-3),
+            xt.TargetSet(line="lhcb1", at=crab_names['ip5']['b1'][1], y=off * 1e-3),
+            xt.TargetSet(line="lhcb2", at=crab_names['ip5']['b2'][1], y=off * 1e-3),
         ]
     )
 
