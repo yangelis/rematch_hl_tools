@@ -8,6 +8,19 @@ default_tol = {
     "bety": 1e-6,
 }  # to have no rematching w.r.t. madx
 
+quads_ir5_b1 = (
+    "kq4.l5b1 kq4.r5b1 kq5.l5b1 kq5.r5b1 kq6.l5b1 kq6.r5b1 "
+    "kq7.l5b1 kq7.r5b1 kq8.l5b1 kq8.r5b1 kq9.l5b1 kq9.r5b1 "
+    "kq10.l5b1 kq10.r5b1 kqtl11.l5b1 kqtl11.r5b1 "
+    "kqt12.l5b1 kqt12.r5b1 kqt13.l5b1 kqt13.r5b1"
+)
+
+quads_ir5_b2 = (
+    "kq4.l5b2 kq4.r5b2 kq5.l5b2 kq5.r5b2 kq6.l5b2 kq6.r5b2 "
+    "kq7.l5b2 kq7.r5b2 kq8.l5b2 kq8.r5b2 kq9.l5b2 kq9.r5b2 "
+    "kq10.l5b2 kq10.r5b2 kqtl11.l5b2 kqtl11.r5b2 kqt12.l5b2 "
+    "kqt12.r5b2 kqt13.l5b2 kqt13.r5b2"
+)
 
 def get_presqueezed_tw(env, ip):
 
@@ -358,19 +371,20 @@ def rematch_ir15(
         vary_list.append(xt.Vary("kq6.l5b2"))
         vary_list.append(xt.Vary("kq6.r5b2"))
 
-    quads_ir5_b1 = (
-        "kq4.l5b1 kq4.r5b1 kq5.l5b1 kq5.r5b1 kq6.l5b1 kq6.r5b1 "
-        "kq7.l5b1 kq7.r5b1 kq8.l5b1 kq8.r5b1 kq9.l5b1 kq9.r5b1 "
-        "kq10.l5b1 kq10.r5b1 kqtl11.l5b1 kqtl11.r5b1 "
-        "kqt12.l5b1 kqt12.r5b1 kqt13.l5b1 kqt13.r5b1"
-    )
+    # quads_ir5_b1 = (
+    #     "kq4.l5b1 kq4.r5b1 kq5.l5b1 kq5.r5b1 kq6.l5b1 kq6.r5b1 "
+    #     "kq7.l5b1 kq7.r5b1 kq8.l5b1 kq8.r5b1 kq9.l5b1 kq9.r5b1 "
+    #     "kq10.l5b1 kq10.r5b1 kqtl11.l5b1 kqtl11.r5b1 "
+    #     "kqt12.l5b1 kqt12.r5b1 kqt13.l5b1 kqt13.r5b1"
+    # )
 
-    quads_ir5_b2 = (
-        "kq4.l5b2 kq4.r5b2 kq5.l5b2 kq5.r5b2 kq6.l5b2 kq6.r5b2 "
-        "kq7.l5b2 kq7.r5b2 kq8.l5b2 kq8.r5b2 kq9.l5b2 kq9.r5b2 "
-        "kq10.l5b2 kq10.r5b2 kqtl11.l5b2 kqtl11.r5b2 kqt12.l5b2 "
-        "kqt12.r5b2 kqt13.l5b2 kqt13.r5b2"
-    )
+    # quads_ir5_b2 = (
+    #     "kq4.l5b2 kq4.r5b2 kq5.l5b2 kq5.r5b2 kq6.l5b2 kq6.r5b2 "
+    #     "kq7.l5b2 kq7.r5b2 kq8.l5b2 kq8.r5b2 kq9.l5b2 kq9.r5b2 "
+    #     "kq10.l5b2 kq10.r5b2 kqtl11.l5b2 kqtl11.r5b2 kqt12.l5b2 "
+    #     "kqt12.r5b2 kqt13.l5b2 kqt13.r5b2"
+    # )
+
     # Beam 1
     for quad in quads_ir5_b1.split()[6:]:
         vary_list.append(xt.Vary(quad))
@@ -445,7 +459,24 @@ def rematch_ir15(
 
     if solve:
         opt.solve()
+        restore_knobs_ir15(collider)
 
+    # redefine_ip1(collider)
+
+    # # remove the imqXlr knobs if any
+    # quads_imqlr = "kq4.l5b2 kq4.r5b2 kq5.l5b2 kq5.r5b2 kq6.l5b2 kq6.r5b2"
+    # for quad in quads_imqlr.split():
+    #     collider.vars[quad] = collider.varval[quad]
+
+    # for quad in quads_ir5_b1.split():
+    #     collider.vars[quad.replace("5b", "1b")] = collider.varval[quad]
+
+    # for quad in quads_ir5_b2.split():
+    #     collider.vars[quad.replace("5b", "1b")] = collider.varval[quad]
+
+    return opt
+
+def restore_knobs_ir15(collider):
     redefine_ip1(collider)
 
     # remove the imqXlr knobs if any
@@ -458,8 +489,6 @@ def rematch_ir15(
 
     for quad in quads_ir5_b2.split():
         collider.vars[quad.replace("5b", "1b")] = collider.varval[quad]
-
-    return opt
 
 
 def redefine_ip1(collider):
