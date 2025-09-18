@@ -133,7 +133,7 @@ def rematch_ir15(
 
     targets = []
 
-    if no_match_beta == False:
+    if not no_match_beta:
         targets.append(
             xt.TargetSet(
                 line="lhcb1",
