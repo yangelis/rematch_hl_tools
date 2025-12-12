@@ -22,7 +22,7 @@ quads_ir5_b2 = (
     "kqt12.r5b2 kqt13.l5b2 kqt13.r5b2"
 )
 
-def get_presqueezed_tw(env, ip):
+def get_presqueezed_tw(env, ip, strengths=False):
 
     arcs = ["81", "12"] if ip == 1 else ["45", "56"] if ip == 5 else [0, 0]
 
@@ -38,6 +38,7 @@ def get_presqueezed_tw(env, ip):
         start=[f"s.ds.l{ip}.b1", f"s.ds.l{ip}.b2"],
         end=[f"e.ds.r{ip}.b1", f"e.ds.r{ip}.b2"],
         init=[beta0_b1, beta0_b2],
+        strengths=strengths,
     )
 
     return tw_ip

@@ -18,11 +18,11 @@ def rephase_arc(collider):
 
 def rebal_arc_trim(
     collider,
-    target_mux_b1,
-    target_muy_b1,
-    target_mux_b2,
-    target_muy_b2,
-    arc_name,
+    target_mux_b1:float,
+    target_muy_b1:float,
+    target_mux_b2:float,
+    target_muy_b2:float,
+    arc_name:str,
     default_tol,
     solve=False,
 ):
@@ -68,7 +68,7 @@ def rebal_arc_trim(
     return opt
 
 
-def ats_phase_aux_ir(collider, nir1, nir2, nir3, line_name, betx, bety):
+def ats_phase_aux_ir(collider, nir1:int, nir2:int, nir3:int, line_name:str, betx:float, bety:float):
     assert line_name in ['lhcb1', 'lhcb2']
     bn = line_name[-2:]
 

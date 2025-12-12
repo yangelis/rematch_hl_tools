@@ -1,6 +1,10 @@
 import numpy as np
 import matplotlib.pyplot as plt
+import pandas as pd
+from scipy.interpolate import interp1d
 
+from xtrack._temp.lhc_match import get_arc_periodic_solution
+from .rematch_irs import get_presqueezed_tw, get_tw_ip
 
 ARC_NAMES = ["12", "23", "34", "45", "56", "67", "78", "81"]
 
@@ -157,7 +161,7 @@ def check_ip(collider, beam="b1"):
     return res
 
 
-def connect_octupoles(collider, energy=7000):
+def connect_octupoles(collider, energy=7000.0):
     from scipy.constants import c as clight
 
     collider.vars["brho"] = energy * 1e9 / clight
@@ -318,9 +322,6 @@ def plot_dmu(tw1, tw2, fig=None, axs=None):
         axs[i].set_ylabel(r"$\Delta \mu_{x,y}$")
 
 
-import pandas as pd
-
-
 def phases_table(env, table=None):
     if table is None:
         table = crit_phases(env)
@@ -328,9 +329,6 @@ def phases_table(env, table=None):
     print(pd.DataFrame(table[1]).transpose().to_markdown())
     print(pd.DataFrame(table[2]).transpose().to_markdown())
     print("\n\n\n")
-
-
-from scipy.interpolate import interp1d
 
 
 def get_strengths_triplet(collider, ip):
@@ -389,16 +387,24 @@ def get_strengths_ds(collider, ip):
 
 
 class IR15:
-    def __init__(self, lhc, N: int, ir: int = 1, mode='hllhc') -> None:
+    def __init__(self, lhc, N: int, ir: int = 1, mode="hllhc") -> None:
         self.ir = ir
         self.mode = mode
         self.triplet_quads = {}
         self.ms_quads = {}
         self.ds_quads = {}
 
+        self.mux_l = np.zeros(N)
+        self.mux_r = np.zeros(N)
+        self.muy_l = np.zeros(N)
+        self.muy_r = np.zeros(N)
+
         self._quads = {}
 
-        if self.mode == 'hllhc':
+        self.tws_pre = {}
+        self.tws = {}
+
+        if self.mode == "hllhc":
             k_triplet = get_strengths_triplethl(lhc, self.ir)
         else:
             k_triplet = get_strengths_triplet(lhc, self.ir)
@@ -416,7 +422,10 @@ class IR15:
     def fill_cycle(self, i, lhc):
         self.betas[i] = lhc.varval[f"betx_ip{self.ir}"]
 
-        if self.mode == 'hllhc':
+        self.tws_pre[i] = get_presqueezed_tw(lhc, ip=self.ir, strengths=True)
+        self.tws[i] = get_tw_ip(lhc, ip=self.ir, strengths=True)
+
+        if self.mode == "hllhc":
             _k_triplet = get_strengths_triplethl(lhc, self.ir)
         else:
             _k_triplet = get_strengths_triplet(lhc, self.ir)
@@ -428,6 +437,12 @@ class IR15:
             self.ms_quads[qname][i] = val
         for qname, val in _k_ds.items():
             self.ds_quads[qname][i] = val
+
+        self.mux_l[i] = lhc.varval["muxip5b1_l"]
+        self.mux_r[i] = lhc.varval["muxip5b1_r"]
+
+        self.muy_l[i] = lhc.varval["muyip5b1_l"]
+        self.muy_r[i] = lhc.varval["muyip5b1_r"]
 
     def add_beta(self, x, ys):
         self.betas = np.append(self.betas, x)
@@ -450,45 +465,92 @@ class IR15:
         for q, kq in self.ds_quads.items():
             self.ds_quads[q] = kq[sort_idx]
 
-class IR8:
-    def __init__(self, N: int, bn="b1") -> None:
-        self.beam = bn
+
+class IR2:
+    def __init__(self, N: int) -> None:
         self.quads = {}
-        self.quad_names = [
-            f"kq6.l8{bn}",
-            f"kq7.l8{bn}",
-            f"kq8.l8{bn}",
-            f"kq9.l8{bn}",
-            f"kq10.l8{bn}",
-            f"kqtl11.l8{bn}",
-            f"kqt12.l8{bn}",
-            f"kqt13.l8{bn}",
-            f"kq4.l8{bn}",
-            f"kq5.l8{bn}",
-            f"kq4.r8{bn}",
-            f"kq5.r8{bn}",
-            f"kq6.r8{bn}",
-            f"kq7.r8{bn}",
-            f"kq8.r8{bn}",
-            f"kq9.r8{bn}",
-            f"kq10.r8{bn}",
-            f"kqtl11.r8{bn}",
-            f"kqt12.r8{bn}",
-            f"kqt13.r8{bn}",
+        self._quad_names = [
+            "kq9.l2",
+            "kq10.l2",
+            "kqtl11.l2",
+            "kqt12.l2",
+            "kqt13.l2",
+            "kq9.r2",
+            "kq10.r2",
+            "kqtl11.r2",
+            "kqt12.r2",
+            "kqt13.r2",
+            "kq4.l2",
+            "kq5.l2",
+            "kq6.l2",
+            "kq7.l2",
+            "kq8.l2",
+            "kq6.r2",
+            "kq7.r2",
+            "kq8.r2",
+            "kq4.r2",
+            "kq5.r2",
         ]
+        self.quad_names_b1 = [qn + "b1" for qn in self._quad_names]
+        self.quad_names_b2 = [qn + "b2" for qn in self._quad_names]
 
         self.betas = np.zeros(N)
-        for q in self.quad_names:
+        self.tws = {}
+        for q in self.quad_names_b1 + self.quad_names_b2:
             self.quads[q] = np.zeros(N)
 
     def fill_cycle(self, i, lhc):
-        self.betas[i] = lhc.varval[f"betxip8{self.beam}"]
-        for q in self.quad_names:
+        self.betas[i] = lhc.varval["betxip2b1"]
+        self.tws[i] = get_tw_ip(lhc, 2)
+        for q in self.quad_names_b1 + self.quad_names_b2:
             self.quads[q][i] = lhc.varval[q]
 
 
+class IR8:
+    def __init__(self, N: int) -> None:
+        self.quads = {}
+        self._quad_names = [
+            "kq6.l8",
+            "kq7.l8",
+            "kq8.l8",
+            "kq9.l8",
+            "kq10.l8",
+            "kqtl11.l8",
+            "kqt12.l8",
+            "kqt13.l8",
+            "kq4.l8",
+            "kq5.l8",
+            "kq4.r8",
+            "kq5.r8",
+            "kq6.r8",
+            "kq7.r8",
+            "kq8.r8",
+            "kq9.r8",
+            "kq10.r8",
+            "kqtl11.r8",
+            "kqt12.r8",
+            "kqt13.r8",
+        ]
+        self.quad_names_b1 = [qn + "b1" for qn in self._quad_names]
+        self.quad_names_b2 = [qn + "b2" for qn in self._quad_names]
+
+        self.betas = np.zeros(N)
+        self.tws = {}
+        for q in self.quad_names_b1 + self.quad_names_b2:
+            self.quads[q] = np.zeros(N)
+
+    def fill_cycle(self, i, lhc):
+        self.betas[i] = lhc.varval["betxip8b1"]
+        self.tws[i] = get_tw_ip(lhc, 8)
+        for q in self.quad_names_b1 + self.quad_names_b2:
+            self.quads[q][i] = lhc.varval[q]
+
+
+import gc
+
+
 class OpticsTable:
-    def __init__(self, lhc, optics_name=[], mode='hllhc') -> None:
+    def __init__(self, lhc, optics_name=[], mode="hllhc") -> None:
         self.time = None
         N = len(optics_name)
         self.lhc = lhc
@@ -496,11 +558,11 @@ class OpticsTable:
         self.mux_arcs = {"b1": {}, "b2": {}}
         self.muy_arcs = {"b1": {}, "b2": {}}
 
-        self.IR8b1 = IR8(N, "b1")
-        self.IR8b2 = IR8(N, "b2")
-
         self.IR1 = IR15(self.lhc, N, 1, self.mode)
         self.IR5 = IR15(self.lhc, N, 5, self.mode)
+
+        self.IR2 = IR2(N)
+        self.IR8 = IR8(N)
 
         for i in ARC_NAMES:
             self.mux_arcs["b1"][i] = np.zeros(N)
@@ -509,44 +571,62 @@ class OpticsTable:
             self.muy_arcs["b2"][i] = np.zeros(N)
 
         self.betas = np.zeros(N)
+        self.betas0 = np.zeros(N)
+        self.ats = np.zeros(N)
+
+        self.crit_phases = {}
+        _crp = crit_phases(self.lhc)
+        for i in range(len(_crp)):
+            for name1 in _crp[i].keys():
+                self.crit_phases[name1] = {}
+                for name2 in _crp[i][name1].keys():
+                    self.crit_phases[name1][name2] = np.zeros(N)
+
         for i in range(N):
+            # self.lhc.vars.default_to_zero = True
             self.lhc.vars.load_madx_optics_file(optics_name[i])
+            # self.lhc.vars.default_to_zero = False
             self.betas[i] = self.lhc.varval["betx_ip5"]
+            self.betas0[i] = self.lhc.varval["betx0_ip5"]
+            self.ats[i] = self.betas0[i] / self.betas[i]
 
-            if self.mode == 'hllhc':
-                for j in ARC_NAMES:
-                    self.mux_arcs["b1"][j][i] = lhc.varval[f"mux{j}b1"]
-                    self.muy_arcs["b1"][j][i] = lhc.varval[f"muy{j}b1"]
-                    self.mux_arcs["b2"][j][i] = lhc.varval[f"mux{j}b2"]
-                    self.muy_arcs["b2"][j][i] = lhc.varval[f"muy{j}b2"]
-            else:
-                for j in ARC_NAMES:
-                    self.mux_arcs["b1"][j][i] = lhc.varval[f"muxa{j}b1"]
-                    self.muy_arcs["b1"][j][i] = lhc.varval[f"muya{j}b1"]
-                    self.mux_arcs["b2"][j][i] = lhc.varval[f"muxa{j}b2"]
-                    self.muy_arcs["b2"][j][i] = lhc.varval[f"muya{j}b2"]
+            _crit_phases = crit_phases(self.lhc)
+            for j in range(len(_crit_phases)):
+                for name1 in _crit_phases[j].keys():
+                    for name2 in _crit_phases[j][name1].keys():
+                        self.crit_phases[name1][name2][i] = _crit_phases[j][name1][name2]
 
-            self.IR8b1.fill_cycle(i, self.lhc)
-            self.IR8b2.fill_cycle(i, self.lhc)
-            
+            # _tw_arcs = get_arc_periodic_solution(self.lhc, arc_name=ARC_NAMES)
+
+            # for j in ARC_NAMES:
+            #     self.mux_arcs["b1"][j][i] = _tw_arcs["lhcb1"][j].mux[-1]
+            #     self.muy_arcs["b1"][j][i] = _tw_arcs["lhcb1"][j].muy[-1]
+            #     self.mux_arcs["b2"][j][i] = _tw_arcs["lhcb2"][j].mux[-1]
+            #     self.muy_arcs["b2"][j][i] = _tw_arcs["lhcb2"][j].muy[-1]
+            # del _tw_arcs
+
+
             self.IR1.fill_cycle(i, self.lhc)
             self.IR5.fill_cycle(i, self.lhc)
 
-        self.quads = {}
+            self.IR2.fill_cycle(i, self.lhc)
+            self.IR8.fill_cycle(i, self.lhc)
+            # gc.collect()
+        # self.quads = {}
 
-        self.IR5_quads = self.IR5.triplet_quads | self.IR5.ms_quads | self.IR5.ds_quads
+        # self.IR5_quads = self.IR5.triplet_quads | self.IR5.ms_quads | self.IR5.ds_quads
 
         self._interpolate = {}
-        for q, kq in self.IR5_quads.items():
-            self._interpolate[q] = self._build_interpolator(kq)
+        # for q, kq in self.IR5_quads.items():
+        # self._interpolate[q] = self._build_interpolator(kq)
 
         # for q, kq in self.IR8b1.quads.items():
         #     self._interpolate[q] = self._build_interpolator(kq)
         # for q, kq in self.IR8b2.quads.items():
         #     self._interpolate[q] = self._build_interpolator(kq)
 
-
     def _build_interpolator(self, quad):
+        # self._interp = make_interp_spline(self.betas, quad, k=1)  # k=1: linear
         self._interp = interp1d(
             self.betas,
             quad,

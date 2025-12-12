@@ -12,11 +12,11 @@ from .rematch_tune_chroma import (
 from .rematch_irs import (
     update_stored_vals_ips,
     rematch_ir6,
-    rematch_new_ir7,
     get_tw_ip,
     ats_phase_aux,
 )
 from .rematch_ir6 import *
+from .rematch_ir7 import *
 
 from .rematch_ir15 import *
 from .rematch_xing15 import *

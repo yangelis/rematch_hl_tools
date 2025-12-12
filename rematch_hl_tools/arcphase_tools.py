@@ -1,7 +1,8 @@
 from xtrack._temp.lhc_match import get_arc_periodic_solution, propagate_optics_from_beta_star
 from xtrack._temp.lhc_match import rematch_ir8, rematch_ir2, rematch_ir3, rematch_ir4
 from .rematch_arcs import rebal_arc_trim, ats_phase_aux_ir
-from .rematch_irs import rematch_new_ir7_both, rematch_ir6
+from .rematch_irs import rematch_ir6
+from .rematch_ir7 import rematch_new_ir7_both
 from .mk_arc_trims import mk_arc_trims
 from .rematch_tune_chroma import rematch_tune_non_ats, rematch_chroma
 
