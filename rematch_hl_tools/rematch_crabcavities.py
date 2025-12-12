@@ -178,7 +178,7 @@ def match_cc_rfmultipole(
     line_name,
     ip,
     hv,
-    z_crab=1e-3,
+    z_crab=1.0,
     default_tol={"x": 1e-20, "px": 1e-20, "y": 1e-20, "py": 1e-20},
     solve=True,
 ):
@@ -192,9 +192,9 @@ def match_cc_rfmultipole(
 
     targets = None
     if hv == "h":
-        targets = [xt.TargetSet(at=ip, px=0, x=1e-6 * z_crab * signb)]
+        targets = [xt.Target(at=ip, tar='dx_zeta', value=1e-6 * z_crab * signb), xt.Target(at=ip, tar='dpx_zeta', value=0.0)]
     elif hv == "v":
-        targets = [xt.TargetSet(at=ip, py=0, y=1e-6 * z_crab * signb)]
+        targets = [xt.Target(at=ip, tar='dy_zeta', value=1e-6 * z_crab * signb), xt.Target(at=ip, tar='dpy_zeta', value=0.0)]
 
     collider.vars[f"vcrabb4r{irn}.{bim}"] = collider.vars[f"vcraba4r{irn}.{bim}"]
     collider.vars[f"vcrabb4l{irn}.{bim}"] = collider.vars[f"vcraba4l{irn}.{bim}"]
@@ -231,17 +231,18 @@ def rematch_crabs_rfmultipole(
     default_tol={"x": 1e-20, "px": 1e-20, "y": 1e-20, "py": 1e-20},
     reset_values=True,
     solve=True,
+    other_plane=False,
 ):
-    
+
     if reset_values:
         for ip in [1, 5]:
             collider.vars[f"on_crab{ip}"] = 0
             for bim in ["b1", "b2"]:
-                # Initial condition of 10 MV
-                collider.vars[f"vcraba4r{ip}.{bim}"] = 10.0
-                collider.vars[f"vcraba4l{ip}.{bim}"] = 10.0
-                collider.vars[f"vcrabb4r{ip}.{bim}"] = 10.0
-                collider.vars[f"vcrabb4l{ip}.{bim}"] = 10.0
+                # Initial condition of ?? MV
+                collider.vars[f"vcraba4r{ip}.{bim}"] = 5.0e-5
+                collider.vars[f"vcraba4l{ip}.{bim}"] = 5.0e-5
+                collider.vars[f"vcrabb4r{ip}.{bim}"] = 5.0e-5
+                collider.vars[f"vcrabb4l{ip}.{bim}"] = 5.0e-5
 
     # NOTE: fixed planes in the sequence
     opt_cc_ip1_b1 = match_cc_rfmultipole(collider, "lhcb1", "ip1", "h", z_crab, default_tol, solve)
