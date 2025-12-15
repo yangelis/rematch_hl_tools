@@ -175,10 +175,10 @@ def rematch_crabs(
 
 def match_cc_rfmultipole(
     collider,
-    line_name,
-    ip,
-    hv,
-    z_crab=1.0,
+    line_name: str,
+    ip: str,
+    hv: str,
+    z_crab: float=1.0,
     default_tol={"x": 1e-20, "px": 1e-20, "y": 1e-20, "py": 1e-20},
     solve=True,
 ):
@@ -198,28 +198,26 @@ def match_cc_rfmultipole(
 
     collider.vars[f"vcrabb4r{irn}.{bim}"] = collider.vars[f"vcraba4r{irn}.{bim}"]
     collider.vars[f"vcrabb4l{irn}.{bim}"] = collider.vars[f"vcraba4l{irn}.{bim}"]
-    vary = xt.VaryList([f"vcraba4r{irn}.{bim}", f"vcraba4l{irn}.{bim}"])
+    vary = xt.VaryList([f"vcraba4r{irn}.{bim}", f"vcraba4l{irn}.{bim}"], step=1e-5)
 
     opt = collider[line_name].match(
         solve=False,
         restore_if_fail=False,
         assert_within_tol=False,
         verbose=False,
-        default_tol=default_tol,
+        # default_tol=default_tol,
         targets=targets,
         vary=vary,
     )
 
     if solve:
         opt.solve()
-    # collider.vars[f"vcrabb4r{irn}.{bim}"] = collider.varval[f"vcraba4r{irn}.{bim}"]
-    # collider.vars[f"vcrabb4l{irn}.{bim}"] = collider.varval[f"vcraba4l{irn}.{bim}"]
 
-    collider.vars[f"on_crab{irn}"] = 1
-    collider.vars[f"vcraba4r{irn}.{bim}"] = collider.varval[f"vcraba4r{irn}.{bim}"] * collider.vars[f"on_crab{irn}"]
-    collider.vars[f"vcraba4l{irn}.{bim}"] = collider.varval[f"vcraba4l{irn}.{bim}"] * collider.vars[f"on_crab{irn}"]
-    collider.vars[f"vcrabb4r{irn}.{bim}"] = collider.varval[f"vcraba4r{irn}.{bim}"] * collider.vars[f"on_crab{irn}"]
-    collider.vars[f"vcrabb4l{irn}.{bim}"] = collider.varval[f"vcraba4l{irn}.{bim}"] * collider.vars[f"on_crab{irn}"]
+    collider.vars[f"on_crab{irn}"] = z_crab
+    collider.vars[f"vcraba4r{irn}.{bim}"] = (collider.varval[f"vcraba4r{irn}.{bim}"] / z_crab) * collider.vars[f"on_crab{irn}"]
+    collider.vars[f"vcraba4l{irn}.{bim}"] = (collider.varval[f"vcraba4l{irn}.{bim}"] / z_crab) * collider.vars[f"on_crab{irn}"]
+    collider.vars[f"vcrabb4r{irn}.{bim}"] = (collider.varval[f"vcraba4r{irn}.{bim}"] / z_crab) * collider.vars[f"on_crab{irn}"]
+    collider.vars[f"vcrabb4l{irn}.{bim}"] = (collider.varval[f"vcraba4l{irn}.{bim}"] / z_crab) * collider.vars[f"on_crab{irn}"]
     collider.vars[f"on_crab{irn}"] = 0
 
     return opt
