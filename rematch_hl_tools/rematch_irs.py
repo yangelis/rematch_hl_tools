@@ -1,6 +1,7 @@
 import xtrack as xt
 from xtrack._temp.lhc_match import get_arc_periodic_solution, compute_ats_phase_advances_for_auxiliary_irs
 from .rematch_ir15 import get_presqueezed_tw
+import numpy as np
 
 
 def get_tw_ip(collider, ip, zero_phase=True, strengths=False):
@@ -274,6 +275,14 @@ def update_stored_vals_ips(collider):
         v[f"muyip7{bim}_r"] = (
             tw[f"lhc{bim}"]["muy", f"e.ds.r7.{bim}"] - tw[f"lhc{bim}"]["muy", "ip7"]
         )
+
+        # HACK: to get around the phases
+        if v[f"muxip8{bim}_r"] < 0:
+            v[f"muxip8{bim}_r"] = np.mod(v[f"muxip8{bim}_r"], tw[f'lhc{bim}'].qx)
+
+        if v[f"muyip8{bim}_r"] < 0:
+            v[f"muyip8{bim}_r"] = np.mod(v[f"muyip8{bim}_r"], tw[f'lhc{bim}'].qy)
+
         v[f"muxip2{bim}_r"] = v[f"muxip2{bim}"] - v[f"muxip2{bim}_l"]
         v[f"muxip6{bim}_r"] = v[f"muxip6{bim}"] - v[f"muxip6{bim}_l"]
         v[f"muxip8{bim}_l"] = v[f"muxip8{bim}"] - v[f"muxip8{bim}_r"]
