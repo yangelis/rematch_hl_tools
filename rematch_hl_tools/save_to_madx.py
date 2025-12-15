@@ -552,7 +552,7 @@ def _save_optics_crabs15(collider, ip):
     for n in names.split():
         tn = n.replace("irn", str(ip))
         expr = clean_expr(collider.vars[tn]._expr)
-        lines.append(f"{n:20} := {expr} ;")
+        lines.append(f"{tn:20} := {expr} ;")
         # lines.append(f"{tn:21} = {collider.varval[tn]:28.16g} ;")
 
     return lines
