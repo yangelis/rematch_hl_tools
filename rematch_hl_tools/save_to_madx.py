@@ -539,16 +539,21 @@ def _save_optics_orb28(collider, ip):
 
 def _save_optics_crabs15(collider, ip):
     lines = []
-    names = (
-        "ahcrab_lirnb1 ahcrab_lirnb2 ahcrab_rirnb1 ahcrab_rirnb2 "
-        "avcrab_lirnb1 avcrab_lirnb2 avcrab_rirnb1 avcrab_rirnb2 "
-        "v_crabh.lirnb1 v_crabh.lirnb2 v_crabh.rirnb1 v_crabh.rirnb2 "
-        "v_crabv.lirnb1 v_crabv.lirnb2 v_crabv.rirnb1 v_crabv.rirnb2"
-    )
+    # names = (
+    #     "ahcrab_lirnb1 ahcrab_lirnb2 ahcrab_rirnb1 ahcrab_rirnb2 "
+    #     "avcrab_lirnb1 avcrab_lirnb2 avcrab_rirnb1 avcrab_rirnb2 "
+    #     "v_crabh.lirnb1 v_crabh.lirnb2 v_crabh.rirnb1 v_crabh.rirnb2 "
+    #     "v_crabv.lirnb1 v_crabv.lirnb2 v_crabv.rirnb1 v_crabv.rirnb2"
+    # )
+    # NOTE: Only save the voltage for HL1.9
+    names = ("vcraba4lirn.b1 vcrabb4lirn.b1 vcraba4rirn.b1 vcrabb4rirn.b1 "
+             "vcraba4lirn.b2 vcrabb4lirn.b2 vcraba4rirn.b2 vcrabb4rirn.b2" )
 
     for n in names.split():
         tn = n.replace("irn", str(ip))
-        lines.append(f"{tn:21} = {collider.varval[tn]:28.16g} ;")
+        expr = clean_expr(collider.vars[tn]._expr)
+        lines.append(f"{n:20} := {expr} ;")
+        # lines.append(f"{tn:21} = {collider.varval[tn]:28.16g} ;")
 
     return lines
 
