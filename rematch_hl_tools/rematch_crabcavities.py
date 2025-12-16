@@ -3,7 +3,7 @@ import numpy as np
 
 
 def match_cc(
-    collider,
+    lhc,
     line_name,
     ip,
     hv,
@@ -11,7 +11,7 @@ def match_cc(
     default_tol={"x": 1e-20, "px": 1e-20, "y": 1e-20, "py": 1e-20},
     solve=True,
 ):
-    collider.vars["z_crab"] = z_crab
+    lhc.vars["z_crab"] = z_crab
 
     irn = ip[2]
     bim = line_name[-2:]
@@ -27,9 +27,9 @@ def match_cc(
 
     vary = xt.VaryList([f"a{hv}crab_l{irn}{bim}", f"a{hv}crab_r{irn}{bim}"])
 
-    collider.vars[f"on_crab{irn}"] = 1
+    lhc.vars[f"on_crab{irn}"] = 1
 
-    opt = collider[line_name].match(
+    opt = lhc[line_name].match(
         solve=False,
         only_markers=False,
         restore_if_fail=False,
@@ -44,46 +44,46 @@ def match_cc(
     if solve:
         opt.solve()
 
-    collider.vars[f"on_crab{irn}"] = 0
+    lhc.vars[f"on_crab{irn}"] = 0
 
     return opt
 
 
 def rematch_crabs(
-    collider,
+    lhc,
     z_crab=1e-3,
     nrj=7000,
     default_tol={"x": 1e-20, "px": 1e-20, "y": 1e-20, "py": 1e-20},
     reset_values=True,
     solve=True,
 ):
-    collider.vars["nrj"] = nrj
-    collider.vars["z_crab"] = z_crab
-    phi_ir1 = collider.varval["phi_ir1"]
-    phi_ir5 = collider.varval["phi_ir5"]
+    lhc.vars["nrj"] = nrj
+    lhc.vars["z_crab"] = z_crab
+    phi_ir1 = lhc.varval["phi_ir1"]
+    phi_ir5 = lhc.varval["phi_ir5"]
     # reset everything
     if reset_values:
         for ip in [1, 5]:
             for bim in ["b1", "b2"]:
                 # Initial condition of 10 MV
-                collider.vars[f"ahcrab_l{ip}{bim}"] = 0.01 / nrj
-                collider.vars[f"ahcrab_r{ip}{bim}"] = 0.01 / nrj
-                collider.vars[f"avcrab_l{ip}{bim}"] = 0.01 / nrj
-                collider.vars[f"avcrab_r{ip}{bim}"] = 0.01 / nrj
+                lhc.vars[f"ahcrab_l{ip}{bim}"] = 0.01 / nrj
+                lhc.vars[f"ahcrab_r{ip}{bim}"] = 0.01 / nrj
+                lhc.vars[f"avcrab_l{ip}{bim}"] = 0.01 / nrj
+                lhc.vars[f"avcrab_r{ip}{bim}"] = 0.01 / nrj
 
-    collider.vars["phi_ir1"] = 0
-    collider.vars["phi_ir5"] = 0
-    opt_cc_h1_b1 = match_cc(collider, "lhcb1", "ip1", "h", z_crab, default_tol, solve)
-    opt_cc_h1_b2 = match_cc(collider, "lhcb2", "ip1", "h", z_crab, default_tol, solve)
-    opt_cc_h5_b1 = match_cc(collider, "lhcb1", "ip5", "h", z_crab, default_tol, solve)
-    opt_cc_h5_b2 = match_cc(collider, "lhcb2", "ip5", "h", z_crab, default_tol, solve)
+    lhc.vars["phi_ir1"] = 0
+    lhc.vars["phi_ir5"] = 0
+    opt_cc_h1_b1 = match_cc(lhc, "lhcb1", "ip1", "h", z_crab, default_tol, solve)
+    opt_cc_h1_b2 = match_cc(lhc, "lhcb2", "ip1", "h", z_crab, default_tol, solve)
+    opt_cc_h5_b1 = match_cc(lhc, "lhcb1", "ip5", "h", z_crab, default_tol, solve)
+    opt_cc_h5_b2 = match_cc(lhc, "lhcb2", "ip5", "h", z_crab, default_tol, solve)
 
-    collider.vars["phi_ir1"] = 90
-    collider.vars["phi_ir5"] = 90
-    opt_cc_v1_b1 = match_cc(collider, "lhcb1", "ip1", "v", z_crab, default_tol, solve)
-    opt_cc_v1_b2 = match_cc(collider, "lhcb2", "ip1", "v", z_crab, default_tol, solve)
-    opt_cc_v5_b1 = match_cc(collider, "lhcb1", "ip5", "v", z_crab, default_tol, solve)
-    opt_cc_v5_b2 = match_cc(collider, "lhcb2", "ip5", "v", z_crab, default_tol, solve)
+    lhc.vars["phi_ir1"] = 90
+    lhc.vars["phi_ir5"] = 90
+    opt_cc_v1_b1 = match_cc(lhc, "lhcb1", "ip1", "v", z_crab, default_tol, solve)
+    opt_cc_v1_b2 = match_cc(lhc, "lhcb2", "ip1", "v", z_crab, default_tol, solve)
+    opt_cc_v5_b1 = match_cc(lhc, "lhcb1", "ip5", "v", z_crab, default_tol, solve)
+    opt_cc_v5_b2 = match_cc(lhc, "lhcb2", "ip5", "v", z_crab, default_tol, solve)
 
     opts = {
         "cc_ip1_b1_h": opt_cc_h1_b1,
@@ -97,26 +97,26 @@ def rematch_crabs(
     }
 
     # reset variables
-    collider.vars["phi_ir1"] = phi_ir1
-    collider.vars["phi_ir5"] = phi_ir5
+    lhc.vars["phi_ir1"] = phi_ir1
+    lhc.vars["phi_ir5"] = phi_ir5
 
-    v_crabh_l1b1 = collider.varval["ahcrab_l1b1"] * nrj * 1e9 * 1e-6
-    v_crabh_r1b1 = collider.varval["ahcrab_r1b1"] * nrj * 1e9 * 1e-6
-    v_crabh_l1b2 = collider.varval["ahcrab_l1b2"] * nrj * 1e9 * 1e-6
-    v_crabh_r1b2 = collider.varval["ahcrab_r1b2"] * nrj * 1e9 * 1e-6
-    v_crabh_l5b1 = collider.varval["ahcrab_l5b1"] * nrj * 1e9 * 1e-6
-    v_crabh_r5b1 = collider.varval["ahcrab_r5b1"] * nrj * 1e9 * 1e-6
-    v_crabh_l5b2 = collider.varval["ahcrab_l5b2"] * nrj * 1e9 * 1e-6
-    v_crabh_r5b2 = collider.varval["ahcrab_r5b2"] * nrj * 1e9 * 1e-6
+    v_crabh_l1b1 = lhc.varval["ahcrab_l1b1"] * nrj * 1e9 * 1e-6
+    v_crabh_r1b1 = lhc.varval["ahcrab_r1b1"] * nrj * 1e9 * 1e-6
+    v_crabh_l1b2 = lhc.varval["ahcrab_l1b2"] * nrj * 1e9 * 1e-6
+    v_crabh_r1b2 = lhc.varval["ahcrab_r1b2"] * nrj * 1e9 * 1e-6
+    v_crabh_l5b1 = lhc.varval["ahcrab_l5b1"] * nrj * 1e9 * 1e-6
+    v_crabh_r5b1 = lhc.varval["ahcrab_r5b1"] * nrj * 1e9 * 1e-6
+    v_crabh_l5b2 = lhc.varval["ahcrab_l5b2"] * nrj * 1e9 * 1e-6
+    v_crabh_r5b2 = lhc.varval["ahcrab_r5b2"] * nrj * 1e9 * 1e-6
 
-    v_crabv_l1b1 = collider.varval["avcrab_l1b1"] * nrj * 1e9 * 1e-6
-    v_crabv_r1b1 = collider.varval["avcrab_r1b1"] * nrj * 1e9 * 1e-6
-    v_crabv_l1b2 = collider.varval["avcrab_l1b2"] * nrj * 1e9 * 1e-6
-    v_crabv_r1b2 = collider.varval["avcrab_r1b2"] * nrj * 1e9 * 1e-6
-    v_crabv_l5b1 = collider.varval["avcrab_l5b1"] * nrj * 1e9 * 1e-6
-    v_crabv_r5b1 = collider.varval["avcrab_r5b1"] * nrj * 1e9 * 1e-6
-    v_crabv_l5b2 = collider.varval["avcrab_l5b2"] * nrj * 1e9 * 1e-6
-    v_crabv_r5b2 = collider.varval["avcrab_r5b2"] * nrj * 1e9 * 1e-6
+    v_crabv_l1b1 = lhc.varval["avcrab_l1b1"] * nrj * 1e9 * 1e-6
+    v_crabv_r1b1 = lhc.varval["avcrab_r1b1"] * nrj * 1e9 * 1e-6
+    v_crabv_l1b2 = lhc.varval["avcrab_l1b2"] * nrj * 1e9 * 1e-6
+    v_crabv_r1b2 = lhc.varval["avcrab_r1b2"] * nrj * 1e9 * 1e-6
+    v_crabv_l5b1 = lhc.varval["avcrab_l5b1"] * nrj * 1e9 * 1e-6
+    v_crabv_r5b1 = lhc.varval["avcrab_r5b1"] * nrj * 1e9 * 1e-6
+    v_crabv_l5b2 = lhc.varval["avcrab_l5b2"] * nrj * 1e9 * 1e-6
+    v_crabv_r5b2 = lhc.varval["avcrab_r5b2"] * nrj * 1e9 * 1e-6
 
     v_crab_h = [
         v_crabh_l1b1,
@@ -162,7 +162,7 @@ def rematch_crabs(
 
     print(f"{crabh_angle_max=}, {crabv_angle_max=}")
 
-    collider.vars["z_crab"] = 0
+    lhc.vars["z_crab"] = 0
 
     crab_angles = {
         "crabh_angle_max": crabh_angle_max,
@@ -172,9 +172,36 @@ def rematch_crabs(
     return (opts, crab_angles)
 
 
+def change_crab_plane(lhc, ip:int, plane:str):
+    assert ip in [1, 5]
+    assert plane in ['h', 'v']
+
+    i_plane = {1: 'h', 5: 'v'}[ip] # original planes
+
+    if plane == 'h':
+        lhc.element_dict[f"acfca{i_plane}.a4l{ip}.b1"].rot_s_rad = 0
+        lhc.element_dict[f"acfca{i_plane}.b4l{ip}.b1"].rot_s_rad = 0
+        lhc.element_dict[f"acfca{i_plane}.a4r{ip}.b1"].rot_s_rad = 0
+        lhc.element_dict[f"acfca{i_plane}.b4r{ip}.b1"].rot_s_rad = 0
+
+        lhc.element_dict[f"acfca{i_plane}.a4l{ip}.b2"].rot_s_rad = 0
+        lhc.element_dict[f"acfca{i_plane}.b4l{ip}.b2"].rot_s_rad = 0
+        lhc.element_dict[f"acfca{i_plane}.a4r{ip}.b2"].rot_s_rad = 0
+        lhc.element_dict[f"acfca{i_plane}.b4r{ip}.b2"].rot_s_rad = 0
+    else :
+        lhc.element_dict[f"acfca{i_plane}.a4l{ip}.b1"].rot_s_rad = np.deg2rad(90)
+        lhc.element_dict[f"acfca{i_plane}.b4l{ip}.b1"].rot_s_rad = np.deg2rad(90)
+        lhc.element_dict[f"acfca{i_plane}.a4r{ip}.b1"].rot_s_rad = np.deg2rad(90)
+        lhc.element_dict[f"acfca{i_plane}.b4r{ip}.b1"].rot_s_rad = np.deg2rad(90)
+
+        lhc.element_dict[f"acfca{i_plane}.a4l{ip}.b2"].rot_s_rad = -np.deg2rad(90)
+        lhc.element_dict[f"acfca{i_plane}.b4l{ip}.b2"].rot_s_rad = -np.deg2rad(90)
+        lhc.element_dict[f"acfca{i_plane}.a4r{ip}.b2"].rot_s_rad = -np.deg2rad(90)
+        lhc.element_dict[f"acfca{i_plane}.b4r{ip}.b2"].rot_s_rad = -np.deg2rad(90)
+
 
 def match_cc_rfmultipole(
-    collider,
+    lhc,
     line_name: str,
     ip: str,
     hv: str,
@@ -182,7 +209,7 @@ def match_cc_rfmultipole(
     default_tol={"x": 1e-20, "px": 1e-20, "y": 1e-20, "py": 1e-20},
     solve=True,
 ):
-    collider.vars["z_crab"] = z_crab
+    lhc.vars["z_crab"] = z_crab
 
     irn = ip[2]
     bim = line_name[-2:]
@@ -196,11 +223,11 @@ def match_cc_rfmultipole(
     elif hv == "v":
         targets = [xt.Target(at=ip, tar='dy_zeta', value=1e-6 * z_crab * signb), xt.Target(at=ip, tar='dpy_zeta', value=0.0)]
 
-    collider.vars[f"vcrabb4r{irn}.{bim}"] = collider.vars[f"vcraba4r{irn}.{bim}"]
-    collider.vars[f"vcrabb4l{irn}.{bim}"] = collider.vars[f"vcraba4l{irn}.{bim}"]
+    lhc.vars[f"vcrabb4r{irn}.{bim}"] = lhc.vars[f"vcraba4r{irn}.{bim}"]
+    lhc.vars[f"vcrabb4l{irn}.{bim}"] = lhc.vars[f"vcraba4l{irn}.{bim}"]
     vary = xt.VaryList([f"vcraba4r{irn}.{bim}", f"vcraba4l{irn}.{bim}"], step=1e-5)
 
-    opt = collider[line_name].match(
+    opt = lhc[line_name].match(
         solve=False,
         restore_if_fail=False,
         assert_within_tol=False,
@@ -213,17 +240,17 @@ def match_cc_rfmultipole(
     if solve:
         opt.solve()
 
-    collider.vars[f"on_crab{irn}"] = z_crab
-    collider.vars[f"vcraba4r{irn}.{bim}"] = (collider.varval[f"vcraba4r{irn}.{bim}"] / z_crab) * collider.vars[f"on_crab{irn}"]
-    collider.vars[f"vcraba4l{irn}.{bim}"] = (collider.varval[f"vcraba4l{irn}.{bim}"] / z_crab) * collider.vars[f"on_crab{irn}"]
-    collider.vars[f"vcrabb4r{irn}.{bim}"] = (collider.varval[f"vcraba4r{irn}.{bim}"] / z_crab) * collider.vars[f"on_crab{irn}"]
-    collider.vars[f"vcrabb4l{irn}.{bim}"] = (collider.varval[f"vcraba4l{irn}.{bim}"] / z_crab) * collider.vars[f"on_crab{irn}"]
-    collider.vars[f"on_crab{irn}"] = 0
+    lhc.vars[f"on_crab{irn}"] = z_crab
+    lhc.vars[f"vcraba4r{irn}.{bim}"] = (lhc.varval[f"vcraba4r{irn}.{bim}"] / z_crab) * lhc.vars[f"on_crab{irn}"]
+    lhc.vars[f"vcraba4l{irn}.{bim}"] = (lhc.varval[f"vcraba4l{irn}.{bim}"] / z_crab) * lhc.vars[f"on_crab{irn}"]
+    lhc.vars[f"vcrabb4r{irn}.{bim}"] = (lhc.varval[f"vcraba4r{irn}.{bim}"] / z_crab) * lhc.vars[f"on_crab{irn}"]
+    lhc.vars[f"vcrabb4l{irn}.{bim}"] = (lhc.varval[f"vcraba4l{irn}.{bim}"] / z_crab) * lhc.vars[f"on_crab{irn}"]
+    lhc.vars[f"on_crab{irn}"] = 0
 
     return opt
 
 def rematch_crabs_rfmultipole(
-    collider,
+    lhc,
     z_crab=1e-3,
     nrj=7000,
     default_tol={"x": 1e-20, "px": 1e-20, "y": 1e-20, "py": 1e-20},
@@ -234,19 +261,19 @@ def rematch_crabs_rfmultipole(
 
     if reset_values:
         for ip in [1, 5]:
-            collider.vars[f"on_crab{ip}"] = 0
+            lhc.vars[f"on_crab{ip}"] = 0
             for bim in ["b1", "b2"]:
-                # Initial condition of ?? MV
-                collider.vars[f"vcraba4r{ip}.{bim}"] = 5.0e-5
-                collider.vars[f"vcraba4l{ip}.{bim}"] = 5.0e-5
-                collider.vars[f"vcrabb4r{ip}.{bim}"] = 5.0e-5
-                collider.vars[f"vcrabb4l{ip}.{bim}"] = 5.0e-5
+                # Initial condition of 3.4 MV
+                lhc.vars[f"vcraba4r{ip}.{bim}"] = 3.4
+                lhc.vars[f"vcraba4l{ip}.{bim}"] = 3.4
+                lhc.vars[f"vcrabb4r{ip}.{bim}"] = 3.4
+                lhc.vars[f"vcrabb4l{ip}.{bim}"] = 3.4
 
     # NOTE: fixed planes in the sequence
-    opt_cc_ip1_b1 = match_cc_rfmultipole(collider, "lhcb1", "ip1", "h", z_crab, default_tol, solve)
-    opt_cc_ip1_b2 = match_cc_rfmultipole(collider, "lhcb2", "ip1", "h", z_crab, default_tol, solve)
-    opt_cc_ip5_b1 = match_cc_rfmultipole(collider, "lhcb1", "ip5", "v", z_crab, default_tol, solve)
-    opt_cc_ip5_b2 = match_cc_rfmultipole(collider, "lhcb2", "ip5", "v", z_crab, default_tol, solve)
+    opt_cc_ip1_b1 = match_cc_rfmultipole(lhc, "lhcb1", "ip1", "h", z_crab, default_tol, solve)
+    opt_cc_ip1_b2 = match_cc_rfmultipole(lhc, "lhcb2", "ip1", "h", z_crab, default_tol, solve)
+    opt_cc_ip5_b1 = match_cc_rfmultipole(lhc, "lhcb1", "ip5", "v", z_crab, default_tol, solve)
+    opt_cc_ip5_b2 = match_cc_rfmultipole(lhc, "lhcb2", "ip5", "v", z_crab, default_tol, solve)
 
     opts = {
         "cc_ip1_b1": opt_cc_ip1_b1,
@@ -254,5 +281,77 @@ def rematch_crabs_rfmultipole(
         "cc_ip5_b1": opt_cc_ip5_b1,
         "cc_ip5_b2": opt_cc_ip5_b2,
     }
+
+    if other_plane:
+        # save expressions for nominal plane
+        lhc.vars["vcraba4l1_h.b1"] = lhc.vars["vcraba4l1.b1"]._expr
+        lhc.vars["vcrabb4l1_h.b1"] = lhc.vars["vcrabb4l1.b1"]._expr
+        lhc.vars["vcraba4r1_h.b1"] = lhc.vars["vcraba4r1.b1"]._expr
+        lhc.vars["vcrabb4r1_h.b1"] = lhc.vars["vcrabb4r1.b1"]._expr
+        lhc.vars["vcraba4l1_h.b2"] = lhc.vars["vcraba4l1.b2"]._expr
+        lhc.vars["vcrabb4l1_h.b2"] = lhc.vars["vcrabb4l1.b2"]._expr
+        lhc.vars["vcraba4r1_h.b2"] = lhc.vars["vcraba4r1.b2"]._expr
+        lhc.vars["vcrabb4r1_h.b2"] = lhc.vars["vcrabb4r1.b2"]._expr
+
+        lhc.vars["vcraba4l5_v.b1"] = lhc.vars["vcraba4l5.b1"]._expr
+        lhc.vars["vcrabb4l5_v.b1"] = lhc.vars["vcrabb4l5.b1"]._expr
+        lhc.vars["vcraba4r5_v.b1"] = lhc.vars["vcraba4r5.b1"]._expr
+        lhc.vars["vcrabb4r5_v.b1"] = lhc.vars["vcrabb4r5.b1"]._expr
+        lhc.vars["vcraba4l5_v.b2"] = lhc.vars["vcraba4l5.b2"]._expr
+        lhc.vars["vcrabb4l5_v.b2"] = lhc.vars["vcrabb4l5.b2"]._expr
+        lhc.vars["vcraba4r5_v.b2"] = lhc.vars["vcraba4r5.b2"]._expr
+        lhc.vars["vcrabb4r5_v.b2"] = lhc.vars["vcrabb4r5.b2"]._expr
+
+        change_crab_plane(lhc, 1, 'v')
+        change_crab_plane(lhc, 5, 'h')
+
+        opt_cc_ip1_b1_v = match_cc_rfmultipole(lhc, "lhcb1", "ip1", "v", z_crab, default_tol, solve)
+        opt_cc_ip1_b2_v = match_cc_rfmultipole(lhc, "lhcb2", "ip1", "v", z_crab, default_tol, solve)
+        opt_cc_ip5_b1_h = match_cc_rfmultipole(lhc, "lhcb1", "ip5", "h", z_crab, default_tol, solve)
+        opt_cc_ip5_b2_h = match_cc_rfmultipole(lhc, "lhcb2", "ip5", "h", z_crab, default_tol, solve)
+
+        change_crab_plane(lhc, 1, 'h')
+        change_crab_plane(lhc, 5, 'v')
+
+        # create knob for other plane
+        lhc.vars["vcraba4l1_v.b1"] = lhc.vars["vcraba4l1.b1"]._expr
+        lhc.vars["vcrabb4l1_v.b1"] = lhc.vars["vcrabb4l1.b1"]._expr
+        lhc.vars["vcraba4r1_v.b1"] = lhc.vars["vcraba4r1.b1"]._expr
+        lhc.vars["vcrabb4r1_v.b1"] = lhc.vars["vcrabb4r1.b1"]._expr
+        lhc.vars["vcraba4l1_v.b2"] = lhc.vars["vcraba4l1.b2"]._expr
+        lhc.vars["vcrabb4l1_v.b2"] = lhc.vars["vcrabb4l1.b2"]._expr
+        lhc.vars["vcraba4r1_v.b2"] = lhc.vars["vcraba4r1.b2"]._expr
+        lhc.vars["vcrabb4r1_v.b2"] = lhc.vars["vcrabb4r1.b2"]._expr
+
+        lhc.vars["vcraba4l5_h.b1"] = lhc.vars["vcraba4l5.b1"]._expr
+        lhc.vars["vcrabb4l5_h.b1"] = lhc.vars["vcrabb4l5.b1"]._expr
+        lhc.vars["vcraba4r5_h.b1"] = lhc.vars["vcraba4r5.b1"]._expr
+        lhc.vars["vcrabb4r5_h.b1"] = lhc.vars["vcrabb4r5.b1"]._expr
+        lhc.vars["vcraba4l5_h.b2"] = lhc.vars["vcraba4l5.b2"]._expr
+        lhc.vars["vcrabb4l5_h.b2"] = lhc.vars["vcrabb4l5.b2"]._expr
+        lhc.vars["vcraba4r5_h.b2"] = lhc.vars["vcraba4r5.b2"]._expr
+        lhc.vars["vcrabb4r5_h.b2"] = lhc.vars["vcrabb4r5.b2"]._expr
+
+        # restore knob expression
+        lhc.vars["vcraba4l1.b1"] = lhc.vars["vcraba4l1_h.b1"]._expr
+        lhc.vars["vcrabb4l1.b1"] = lhc.vars["vcrabb4l1_h.b1"]._expr
+        lhc.vars["vcraba4r1.b1"] = lhc.vars["vcraba4r1_h.b1"]._expr
+        lhc.vars["vcrabb4r1.b1"] = lhc.vars["vcrabb4r1_h.b1"]._expr
+        lhc.vars["vcraba4l1.b2"] = lhc.vars["vcraba4l1_h.b2"]._expr
+        lhc.vars["vcrabb4l1.b2"] = lhc.vars["vcrabb4l1_h.b2"]._expr
+        lhc.vars["vcraba4r1.b2"] = lhc.vars["vcraba4r1_h.b2"]._expr
+        lhc.vars["vcrabb4r1.b2"] = lhc.vars["vcrabb4r1_h.b2"]._expr
+
+        lhc.vars["vcraba4l5.b1"] = lhc.vars["vcraba4l5_v.b1"]._expr
+        lhc.vars["vcrabb4l5.b1"] = lhc.vars["vcrabb4l5_v.b1"]._expr
+        lhc.vars["vcraba4r5.b1"] = lhc.vars["vcraba4r5_v.b1"]._expr
+        lhc.vars["vcrabb4r5.b1"] = lhc.vars["vcrabb4r5_v.b1"]._expr
+        lhc.vars["vcraba4l5.b2"] = lhc.vars["vcraba4l5_v.b2"]._expr
+        lhc.vars["vcrabb4l5.b2"] = lhc.vars["vcrabb4l5_v.b2"]._expr
+        lhc.vars["vcraba4r5.b2"] = lhc.vars["vcraba4r5_v.b2"]._expr
+        lhc.vars["vcrabb4r5.b2"] = lhc.vars["vcrabb4r5_v.b2"]._expr
+
+        opts.update({"cc_ip1_b1_v": opt_cc_ip1_b1_v, "cc_ip1_b2_v": opt_cc_ip1_b2_v,
+                     "cc_ip5_b1_h": opt_cc_ip5_b1_h, "cc_ip5_b2_h": opt_cc_ip5_b2_h})
 
     return opts
